@@ -8,7 +8,7 @@ class Tag(models.Model):
     name = models.CharField(max_length=75)
 
     def __str__(self):
-        return self.name
+        return f'Tag {self.name}'
 
 
 class Question(models.Model):
@@ -18,7 +18,7 @@ class Question(models.Model):
     modified_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return self.name
+        return f'User {self.author.id} : Question {self.question}'
 
 
 class QuestionTags(models.Model):
@@ -29,7 +29,7 @@ class QuestionTags(models.Model):
         db_table = "question_tags"
 
     def __str__(self):
-        return self.question.id + ' : ' + self.tag.id
+        return f'Question {self.question.id} : Tag {self.tag.id}'
 
 
 class Answer(models.Model):
@@ -41,7 +41,8 @@ class Answer(models.Model):
     modified_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return self.answer
+        return f'User {self.author.id} Question {self.question.id}'\
+                ' Answer {self.answer}'
 
 
 class Reply(models.Model):
@@ -55,7 +56,8 @@ class Reply(models.Model):
         db_table = "replies"
 
     def __str__(self):
-        return self.reply
+        return f'User {self.author.id} Answer {self.answer.id}'\
+                ' Reply {self.reply}'
 
 
 class Reaction(models.Model):
@@ -63,7 +65,7 @@ class Reaction(models.Model):
     score = models.IntegerField()
 
     def __str__(self):
-        return self.name + " : " + self.score
+        return f'Reaction {self.name} : Score {self.score}'
 
 
 class QuestionReactions(models.Model):
@@ -75,4 +77,5 @@ class QuestionReactions(models.Model):
         db_table = "question_reactions"
 
     def __str__(self):
-        return self.question.id + ' : ' + self.tag.id
+        return f'User {self.author.id} : Question {self.question.id}'\
+                ': Reaction {self.reaction.id}'
