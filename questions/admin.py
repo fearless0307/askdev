@@ -3,7 +3,7 @@ from questions.models import Tag, Question, QuestionTags, Answer, Reply,\
     Reaction, QuestionReactions
 
 
-# Register your models here.
+
 admin.site.register(Tag)
 admin.site.register(Question)
 admin.site.register(QuestionTags)
