@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
     'questions.apps.QuestionsConfig',
     'stories.apps.StoriesConfig',
     'users.apps.UsersConfig',
