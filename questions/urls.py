@@ -13,7 +13,7 @@ urlpatterns = [
     path('api/questiontag/', views.QuestionTag_list.as_view()),
     path('api/questiontag/<int:pk>/', views.QuestionTag_detail.as_view()),
     path('api/answer/', views.Answer_list.as_view()),
-    path('api/answer/<int:pk>/', views.Answer_detail.as_view()),
+    path('api/answer/<int:pk>/', views.Answer_detail.as_view(),name='answer-detail'),
 
     path('api/questions/', views.Question_class.as_view(), name='questions'),
     path('api/questions/<int:pk>/', views.Question_Detail_class.as_view(),

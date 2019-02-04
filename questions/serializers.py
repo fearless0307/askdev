@@ -5,9 +5,11 @@ from questions.models import Reply, QuestionReaction, Tag, QuestionTag, Answer
 
 
 class QuestionSerializer(serializers.HyperlinkedModelSerializer):
+    # answer = serializers.HyperlinkedIdentityField(view_name='answer',many=True)
+
     class Meta:
         model = Question
-        fields = ['id', 'author', 'question', 'created_at', 'modified_at']
+        fields = ['id', 'author', 'question', 'created_at', 'modified_at','answer_set']
 
 
 class AnswerSerializer(serializers.HyperlinkedModelSerializer):
@@ -26,7 +28,7 @@ class AnswerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Answer
         fields = ('question', 'id', 'author', 'answer', 'is_satisfied',
-                  'modified_at', 'created_at')
+                  'modified_at', 'created_at','user')
 
 
 class ReplySerializer(serializers.ModelSerializer):
