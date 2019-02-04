@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'stories.apps.StoriesConfig',
     'users.apps.UsersConfig',
     'crispy_forms',
+    'ckeditor',
     'PIL',
     'django.contrib.admin',
     'django.contrib.auth',

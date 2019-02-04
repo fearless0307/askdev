@@ -2,17 +2,19 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from questions.models import Reaction, Tag
+from ckeditor.fields import RichTextField
 
 
 # Create your models here.
 class Story(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    story = models.TextField()
+    title = models.CharField(max_length=100, null=True)
+    story = RichTextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'User {self.author.id} : Story {self.story}'
+        return f'Author : {self.author} ID : {self.author.id} Title : {self.title}'
 
 
 class StoryTag(models.Model):
@@ -20,7 +22,7 @@ class StoryTag(models.Model):
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'Story {self.story.id} : Tag {self.tag.id}'
+        return f'Story : {self.story.id} Tag : {self.tag.id}'
 
 
 class StoryReaction(models.Model):

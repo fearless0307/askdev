@@ -1,0 +1,15 @@
+{% extends "stories/base.html" %}
+{% block content %}
+{% for story in stories %}
+<article class="media content-section">
+    <div class="media-body">
+        <div class="article-metadata">
+            <a class="mr-2" href="#">{{ story.author }}</a>
+            <small class="text-muted">{{ story.created_at | date:"F d, Y" }}</small>
+        </div>
+        <h2><a class="article-title" href="#">{{ story.title }}</a></h2>
+        <p class="article-content">{{ story.story | safe }}</p>
+    </div>
+</article>
+{% endfor %}
+{% endblock content %}
