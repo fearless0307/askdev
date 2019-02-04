@@ -1,6 +1,4 @@
 from django.shortcuts import render
-from . models import Story
-# Create your views here.
 from rest_framework import status
 from django.http import Http404
 from rest_framework.views import APIView
@@ -125,10 +123,6 @@ class StoryReaction_detail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 def stories_home(request):
-    '''
-    Home page for stories app.
-    Returns to the home page of the stories app.
-    '''
     context = {
         'stories': Story.objects.all()
     }
