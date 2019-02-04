@@ -14,19 +14,16 @@ class Tag(models.Model):
 class Question(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.TextField()
-    created_at = models.DateTimeField(default=timezone.now)
-    modified_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'User {self.author.id} : Question {self.question}'
 
 
-class QuestionTags(models.Model):
+class QuestionTag(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
-
-    class Meta:
-        db_table = "question_tags"
 
     def __str__(self):
         return f'Question {self.question.id} : Tag {self.tag.id}'
@@ -37,8 +34,8 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     answer = models.TextField()
     is_satisfied = models.BooleanField(default=False)
-    created_at = models.DateTimeField(default=timezone.now)
-    modified_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'User {self.author.id} Question {self.question.id}'\
@@ -49,11 +46,8 @@ class Reply(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
     reply = models.TextField()
-    created_at = models.DateTimeField(default=timezone.now)
-    modified_at = models.DateTimeField(default=timezone.now)
-
-    class Meta:
-        db_table = "replies"
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'User {self.author.id} Answer {self.answer.id}'\
@@ -68,13 +62,10 @@ class Reaction(models.Model):
         return f'Reaction {self.name} : Score {self.score}'
 
 
-class QuestionReactions(models.Model):
+class QuestionReaction(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     reaction = models.ForeignKey(Reaction, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    class Meta:
-        db_table = "question_reactions"
 
     def __str__(self):
         return f'User {self.author.id} : Question {self.question.id}'\
