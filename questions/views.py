@@ -5,8 +5,8 @@ from rest_framework import status
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from questions.models import Reply, QuestionReaction, Tag
-from questions.serializers import ReplySerializer, QuestionReactionSerializer, TagsSerializer
+from questions.models import Reply, QuestionReaction, Tag, QuestionTag, Answer
+from questions.serializers import ReplySerializer, QuestionReactionSerializer, TagSerializer, QuestionTagSerializer, AnswerSerializer
 
 class Reply_list(APIView):
     def get(self, request, format=None):
@@ -86,22 +86,18 @@ class QuestionReaction_detail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-
-
 class Tags_list(APIView):
     def get(self, request, format=None):
         tags = Tag.objects.all()
-        serializer = TagsSerializer(tags, many=True)
+        serializer = TagSerializer(tags, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = TagsSerializer(data=request.data)
+        serializer = TagSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 class Tags_detail(APIView):
     def get_object(self, pk):
@@ -112,12 +108,12 @@ class Tags_detail(APIView):
 
     def get(self, request, pk, format=None):
         tags = Tag.objects.get(pk=pk)
-        serializer = TagsSerializer(tags)
+        serializer = TagSerializer(tags)
         return Response(serializer.data)
     
     def put(self, request, pk, format=None):
         tags = Tag.objects.get(pk=pk)
-        serializer = TagsSerializer(tags, data=request.data)
+        serializer = TagSerializer(tags, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -126,4 +122,82 @@ class Tags_detail(APIView):
     def delete(self, request, pk, format=None):
         tags = Tag.objects.get(pk=pk)
         tags.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class QuestionTag_list(APIView):
+    def get(self, request, format=None):
+        question_tag = QuestionTag.objects.all()
+        serializer = QuestionTagSerializer(question_tag, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = QuestionTagSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class QuestionTag_detail(APIView):
+    def get_object(self, pk):
+        try:
+            return QuestionTag.objects.get(pk=pk)
+        except QuestionTag.DoesNotExist:
+            return Http404
+
+    def get(self, request, pk, format=None):
+        question_tag = QuestionTag.objects.get(pk=pk)
+        serializer = QuestionTagSerializer(question_tag)
+        return Response(serializer.data)
+    
+    def put(self, request, pk, format=None):
+        question_tag = QuestionTag.objects.get(pk=pk)
+        serializer = QuestionTagSerializer(question_tag, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+    
+    def delete(self, request, pk, format=None):
+        question_tag = QuestionTag.objects.get(pk=pk)
+        question_tag.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class Answer_list(APIView):
+    def get(self, request, format=None):
+        answer = Answer.objects.all()
+        serializer = AnswerSerializer(answer, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = AnswerSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class Answer_detail(APIView):
+    def get_object(self, pk):
+        try:
+            return Answer.objects.get(pk=pk)
+        except Answer.DoesNotExist:
+            return Http404
+
+    def get(self, request, pk, format=None):
+        answer = Answer.objects.get(pk=pk)
+        serializer = AnswerSerializer(answer)
+        return Response(serializer.data)
+    
+    def put(self, request, pk, format=None):
+        answer = Answer.objects.get(pk=pk)
+        serializer = AnswerSerializer(answer, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+    
+    def delete(self, request, pk, format=None):
+        answer = Answer.objects.get(pk=pk)
+        answer.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
