@@ -6,8 +6,8 @@ from rest_framework import request
 class QuestionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Question
-        fields = '__all__'
-        # extra_fields = ['pizzas']
+        fields = ['id','author','question','created_at','modified_at']
+       
         
 
 
@@ -26,5 +26,4 @@ class AnswerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Answer
         fields = ('question','id', 'author', 'answer','is_satisfied','modified_at', 'created_at')
-        # fields = '__all__'
-        # extra_fields = ['question']
+       

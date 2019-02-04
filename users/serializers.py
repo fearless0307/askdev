@@ -1,22 +1,25 @@
 from rest_framework import serializers
 from .models  import Profile ,FavouriteQuestion
 from rest_framework import request
+from django.contrib.auth.models import User
 
 
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username','email')
+       
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
+                                        
     class Meta:
         model = Profile
-        fields = '__all__'
-        # extra_fields = ['pizzas']
+        fields = ('profession','phone','profile_image','cover_image')
+        
 
 
 class FavouriteQuestionSerializer(serializers.HyperlinkedModelSerializer):
-    user = serializers.HyperlinkedRelatedField(many=False,
-                                            read_only=True,
-                                            view_name='user-detail',
-                                            lookup_url_kwarg='pk')
+                                         
     class Meta:
         model = FavouriteQuestion
-        fields = '__all__'
-        extra_fields = ['user']
+       

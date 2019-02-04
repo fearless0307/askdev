@@ -4,11 +4,7 @@ from questions import views
 
 urlpatterns = [
     
-    # path('', views.home,name='home'),
     path('api/questions/', views.Question_class.as_view(),name='questions'),
     path('api/questions/<int:pk>/', views.Question_Detail_class.as_view(), name="question-detail"),
-    path('',include('users.urls')),
-    # path('deliveries/', views.Deliveries_class.as_view(),name='deliveries'),
-    # path('deliveries/<int:pk>', views.Delivery_Detail_class.as_view(),name='deliveries-detail'),
-    
+    path('',include('users.urls')), 
 ]
