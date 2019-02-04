@@ -1,0 +1,140 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+      integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+    <link rel="shortcut icon" type="image/png" href="{% static 'questions/img/favicon.ico' %}"/>
+
+    <link rel="stylesheet" href="{% static 'questions/css/style.css' %}">
+
+    {% if title %}
+    <title>Askdev - {{ title }}</title>
+    {% else %}
+    <title>Askdev</title>
+    {% endif %}
+  </head>
+  <body>
+
+    <div class="container-fluid border bg-white py-2">
+      <div class="row">
+        <div class="col-lg-1 col-xl-1 d-none d-lg-block">
+        </div>
+        <div class="col-3 col-sm-2 col-md-2 px-0 d-block d-lg-none d-xl-none">
+          <button class="btn"><i class="fas fa-bars"></i></button>
+          <img class="img-fluid" src="{% static 'questions/img/favicon.ico' %}" style="width: 32px;">
+        </div>
+        <div class="col-lg-2 col-xl-2 d-none d-lg-block d-xl-block">
+          <img class="img-fluid" src="{% static 'questions/img/favicon.ico' %}" style="width: 32px;"> AskDev
+        </div>
+        <div class="col-5 col-sm-7 col-md-7 col-lg-6 col-xl-6">
+          <div class="input-group mb-2 mr-sm-2">
+            <div class="input-group-prepend">
+              <div class="input-group-text bg-white border-right-0"><i class="fas fa-search"></i></div>
+            </div>
+            <input type="text" class="form-control" id="search" placeholder="Search Askdev">
+          </div>
+        </div>
+        <div class="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-3 text-md-right px-md-2 px-0">
+          <button class="btn btn-create">
+            <span class="d-block d-lg-none d-xl-none"><i class="fas fa-plus-circle"></i></span>
+            <span class="d-none d-lg-block d-xl-block"><i class="fas fa-plus-circle"></i> Create</span>
+            </button>
+          <a class="btn-notification" href="#"><i class="far fa-bell"></i></a>
+          <button class="btn border">
+            <span class="d-block d-lg-none d-xl-none"><i class="far fa-user-circle"></i></span>
+            <span class="d-none d-lg-block d-xl-block"><i class="far fa-user-circle"></i> Sign in</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- \ Navigation -->
+
+    <div class="container-fluid bg-white py-2">
+      <div class="row">
+        <div class="col-lg-1 col-xl-1 d-none d-lg-block">
+        </div>
+        <div class="col-12 col-sm-12 col-md-12 col-lg-10 col-xl-10 view-type">
+          <span>VIEW</span>
+          <span><a href="#"><i class="fas fa-th-large"></i></a></span>
+          <span><a href="#"><i class="fas fa-bars"></i></a></span>
+          <span><a href="#"><i class="fas fa-align-justify"></i></a></span>
+          <span class="border h-100"></span>
+          <span>SORT</span>
+          <span>
+            <div class="btn-group">
+              <button type="button" class="btn">&#x1F525 Hot</button>
+              <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="#">&#x1F525 Hot</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">New</a>
+              </div>
+            </div>
+          </span>
+        </div>
+      </div>
+    </div>
+    <!-- \ View -->
+
+    <div class="container-fluid mt-4">
+      <div class="row">
+        <div class="col-lg-1 col-xl-1 d-none d-lg-block">
+        </div>
+        <div class="col-lg-2 col-xl-2 d-none d-lg-block d-xl-block">
+          <div class="card bg-white">
+            <div class="card-body px-1 py-3">
+              <ul class="nav flex-column">
+                <li class="nav-item">
+                  <a class="nav-link text-black p-1 p-xl-2" href="#">HOME</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-black p-1 p-xl-2" href="#">STORIES</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-black p-1 p-xl-2" href="#">TAGS</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-black p-1 p-xl-2" href="#">COMMUNITIES</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-8">
+        
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} my-2">
+                {{message}}
+              </div>
+            {% endfor %}
+          {% endif %}
+          {% block content %}{% endblock %}
+
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+      integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+      integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+  </body>
+</html>
