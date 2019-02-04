@@ -7,7 +7,7 @@
             <a class="mr-2" href="#">{{ story.author }}</a>
             <small class="text-muted">{{ story.created_at | date:"F d, Y" }}</small>
         </div>
-        <h2><a class="article-title" href="#">{{ story.title }}</a></h2>
+        <h2><a class="article-title" href="{% url 'story-detail' story.id %}">{{ story.title }}</a></h2>
         <p class="article-content">{{ story.story | safe }}</p>
     </div>
 </article>
