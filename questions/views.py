@@ -1,34 +1,31 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
-from rest_framework import request
-from questions.models import Question, Answer
-from questions.serializers import QuestionSerializer, AnswerSerializer
+from rest_framework import request, status
+from questions.models import Question, Reply, QuestionReaction,\
+    Tag, QuestionTag, Answer
+from questions.serializers import QuestionSerializer, AnswerSerializer,\
+    ReplySerializer, QuestionReactionSerializer, TagSerializer,\
+    QuestionTagSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
 
-# Create your views here.
-from rest_framework import status
-from django.http import Http404
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from questions.models import Reply, QuestionReaction, Tag, QuestionTag, Answer
-from questions.serializers import ReplySerializer, QuestionReactionSerializer, TagSerializer, QuestionTagSerializer, AnswerSerializer
 
 def home(request):
     return render(request, 'questions/index.html', )
 
 
 class Question_class(APIView):
-    
+
     def get(self, request, format=None):
         question = Question.objects.all()
-        serializer = QuestionSerializer(question, context={'request': request}, many=True)
+        serializer = QuestionSerializer(question, context={'request': request},
+                                        many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = QuestionSerializer(data=request.data,context={'request': request})
+        serializer = QuestionSerializer(data=request.data,
+                                        context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -36,7 +33,6 @@ class Question_class(APIView):
 
 
 class Question_Detail_class(APIView):
-   
     def get_object(self, pk):
         try:
             return Question.objects.get(id=pk)
@@ -50,7 +46,8 @@ class Question_Detail_class(APIView):
 
     def put(self, request, pk, format=None):
         question = self.get_object(pk)
-        serializer = QuestionSerializer(question, data=request.data, context={'request': request})
+        serializer = QuestionSerializer(question, data=request.data,
+                                        context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -60,6 +57,8 @@ class Question_Detail_class(APIView):
         question = self.get_object(pk)
         question.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class Reply_list(APIView):
     def get(self, request, format=None):
         reply = Reply.objects.all()
@@ -73,6 +72,7 @@ class Reply_list(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class Reply_detail(APIView):
     def get_object(self, pk):
         try:
@@ -84,15 +84,15 @@ class Reply_detail(APIView):
         reply = Reply.objects.get(pk=pk)
         serializer = ReplySerializer(reply)
         return Response(serializer.data)
-    
+
     def put(self, request, pk, format=None):
         reply = Reply.objects.get(pk=pk)
         serializer = ReplySerializer(reply, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
-    
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def delete(self, request, pk, format=None):
         reply = Reply.objects.get(pk=pk)
         reply.delete()
@@ -112,6 +112,7 @@ class QuestionReaction_list(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class QuestionReaction_detail(APIView):
     def get_object(self, pk):
         try:
@@ -123,15 +124,15 @@ class QuestionReaction_detail(APIView):
         reaction = QuestionReaction.objects.get(pk=pk)
         serializer = QuestionReactionSerializer(reaction)
         return Response(serializer.data)
-    
+
     def put(self, request, pk, format=None):
         reaction = QuestionReaction.objects.get(pk=pk)
         serializer = QuestionReaction(reaction, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
-    
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def delete(self, request, pk, format=None):
         reaction = QuestionReaction.objects.get(pk=pk)
         reaction.delete()
@@ -151,6 +152,7 @@ class Tags_list(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class Tags_detail(APIView):
     def get_object(self, pk):
         try:
@@ -162,15 +164,15 @@ class Tags_detail(APIView):
         tags = Tag.objects.get(pk=pk)
         serializer = TagSerializer(tags)
         return Response(serializer.data)
-    
+
     def put(self, request, pk, format=None):
         tags = Tag.objects.get(pk=pk)
         serializer = TagSerializer(tags, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
-    
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def delete(self, request, pk, format=None):
         tags = Tag.objects.get(pk=pk)
         tags.delete()
@@ -190,6 +192,7 @@ class QuestionTag_list(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class QuestionTag_detail(APIView):
     def get_object(self, pk):
         try:
@@ -201,15 +204,15 @@ class QuestionTag_detail(APIView):
         question_tag = QuestionTag.objects.get(pk=pk)
         serializer = QuestionTagSerializer(question_tag)
         return Response(serializer.data)
-    
+
     def put(self, request, pk, format=None):
         question_tag = QuestionTag.objects.get(pk=pk)
         serializer = QuestionTagSerializer(question_tag, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
-    
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def delete(self, request, pk, format=None):
         question_tag = QuestionTag.objects.get(pk=pk)
         question_tag.delete()
@@ -229,6 +232,7 @@ class Answer_list(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class Answer_detail(APIView):
     def get_object(self, pk):
         try:
@@ -240,15 +244,15 @@ class Answer_detail(APIView):
         answer = Answer.objects.get(pk=pk)
         serializer = AnswerSerializer(answer)
         return Response(serializer.data)
-    
+
     def put(self, request, pk, format=None):
         answer = Answer.objects.get(pk=pk)
         serializer = AnswerSerializer(answer, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
-    
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def delete(self, request, pk, format=None):
         answer = Answer.objects.get(pk=pk)
         answer.delete()

@@ -1,21 +1,21 @@
 from django.shortcuts import render
-from django.shortcuts import render
 from rest_framework.decorators import api_view
-from rest_framework import request
+from rest_framework import request, status
 from users.models import Profile, FavouriteQuestion
-from users.serializers import UserSerializer, FavouriteQuestionSerializer, ProfileSerializer
+from users.serializers import UserSerializer, FavouriteQuestionSerializer,\
+    ProfileSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
 from django.contrib.auth.models import User
 
 
 class User_class(APIView):
-    
+
     def get(self, request, format=None):
         user = User.objects.all()
-        serializer = UserSerializer(user, context={'request': request}, many=True)
+        serializer = UserSerializer(user, context={'request': request},
+                                    many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
@@ -27,7 +27,7 @@ class User_class(APIView):
 
 
 class User_Detail_class(APIView):
-   
+
     def get_object(self, pk):
         try:
             return User.objects.get(id=pk)
@@ -36,11 +36,13 @@ class User_Detail_class(APIView):
 
     def get(self, request, pk, format=None):
         user = self.get_object(pk)
-        user_serializer = UserSerializer(user,context={'request': request})
+        user_serializer = UserSerializer(user, context={'request': request})
         profile = Profile.objects.filter(id=pk).first()
         if profile is not None:
-            profile_serializer = ProfileSerializer(profile,context={'request': request})
-            return Response({**user_serializer.data, **profile_serializer.data})
+            profile_serializer =\
+                ProfileSerializer(profile, context={'request': request})
+            return \
+                Response({**user_serializer.data, **profile_serializer.data})
         else:
             return Response(user_serializer.data)
 
@@ -61,8 +63,10 @@ class User_Detail_class(APIView):
     #         'cover_image': user['cover_image'],
     #     }
     #     print("profile",user1)
-    #     user_serializer = UserSerializer(user1, data=user_data,context={'request': request})
-    #     user_profile_serializer = ProfileSerializer(profile, data=user_profile,context={'request': request})
+    #     user_serializer =\
+    #       UserSerializer(user1, data=user_data,context={'request': request})
+    #     user_profile_serializer =\
+    #       ProfileSerializer(profile, data=user_profile,context={'request': request})
     #     print("cond=",user_serializer.is_valid() , user_profile_serializer.is_valid())
     #     if user_serializer.is_valid() and user_profile_serializer.is_valid():
     #         user_serializer.save()
