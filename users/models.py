@@ -34,8 +34,5 @@ class FavouriteQuestion(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    class Meta:
-        db_table = "favourite_questions"
-
     def __str__(self):
         return f'User {self.author.id} : Question {self.question.id}'
