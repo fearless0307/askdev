@@ -1,12 +1,13 @@
 {% extends 'questions/base.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
 <h2>New Story</h2>
 <form class="post-form" method="post">
     {% csrf_token %}
     {{ story_form.media }}
-    {{ story_form.as_p | safe }}
+    {{ story_form | crispy }}
     {{ storytag_form.media }}
-    {{ storytag_form.as_p | safe }}
+    {{ storytag_form | crispy }}
     <button type="submit">Post</button>
 </form>
 {% endblock %}

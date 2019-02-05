@@ -3,17 +3,22 @@ from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from stories.models import Story, StoryTag
 from stories.forms import StoryForm, StoryTagForm
-
+from questions.models import Tag
+from django.http import HttpResponse
 
 def stories_home(request):
     context = {
         'stories': Story.objects.all().order_by('-created_at'),
+        'tags': StoryTag.objects.all()
     }
     return render(request, 'stories/home.html', context)
 
 def stories_detail(request, pk):
-    story = get_object_or_404(Story, pk=pk)
-    return render(request, 'stories/story_detail.html', {'story':story})
+    context = {
+        'story' : get_object_or_404(Story, pk=pk),
+        'tags' : get_object_or_404(StoryTag, story_id=pk)
+    }
+    return render(request, 'stories/story_detail.html', context)
 
 def stories_create(request):
     if request.method == 'POST':

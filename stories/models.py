@@ -26,7 +26,7 @@ class StoryTag(models.Model):
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        return f'Story : {self.story.id} Tag : {self.tag.id}'
+        return f'Story : {self.story.id} author: {self.story.author} Tag : {self.tag.name}'
 
 
 class StoryReaction(models.Model):
