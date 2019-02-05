@@ -9,8 +9,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 
-def home(request):
-    return render(request, 'questions/index.html', )
+def questions_home(request):
+    return render(request, 'questions/home.html', {'title': 'Home'})
 
 
 class Question_class(APIView):
