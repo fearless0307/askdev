@@ -3,12 +3,9 @@ from stories import views
 
 urlpatterns = [
     path('stories/', views.stories_home, name='stories-home'),
-    path('stories/<int:pk>/', views.StorydetailView.as_view(),
-         name='story-detail'),
-    path('stories/create/', views.StorycreateView.as_view(),
-         name='story-create'),
-    path('stories/<int:pk>/update/', views.StoryupdateView.as_view(),
-         name='story-update'),
-    path('stories/<int:pk>/delete/', views.StorydeleteView.as_view(),
-         name='story-delete'),
+    path('stories/<int:pk>/', views.stories_detail, 
+        name='stories-detail'),
+    path('stories/create/', views.stories_create, name='stories-create'),
+    path('stories/<int:pk>/edit/', views.stories_edit, name='stories-edit'),
+    path('stories/<int:pk>/delete/', views.stories_delete, name='stories-delete')
 ]

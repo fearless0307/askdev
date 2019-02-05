@@ -1,8 +1,13 @@
 {% extends 'questions/base.html' %}
 {% block content %}
-<div class="content">
-    <h2><a href="#">{{ story.author }}</a></h2>
-    <h2><a href="#">{{ story.title }}</a></h2>
-    <h1>{{ story.story | safe }}</h1>
+<div class="card bg-white mb-4 p-4">
+    <div class="col-10 col-md-11">
+        <a href="#" class="mr-2">{{ story.author }}</a>
+        <h2><a class="article-title" href="#">{{ story.title }}</a></h2>
+        <h6><a href="#">#tag1</a> <a href="#">#tag2</a></h6>
+        <p>{{ story.story | safe }}</p>
+        <a href="{% url 'stories-edit' pk=story.pk%}" class="btn btn-default">Edit Story</a>
+        <a href="{% url 'stories-delete' pk=story.pk %}" class="btn btn-default">Delete</a>
+    </div>
 </div>
 {% endblock %}
