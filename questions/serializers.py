@@ -34,8 +34,9 @@ class QuestionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Question
-        fields = ['url', 'id', 'author', 'question', 'created_at',
-                  'modified_at', 'answers', 'questionreaction_set', 'tags']
+        fields = ['url', 'id', 'author', 'question', 'description',
+                  'created_at', 'modified_at', 'answers',
+                  'questionreaction_set', 'tags']
 
 
 class AnswerSerializer(serializers.HyperlinkedModelSerializer):
