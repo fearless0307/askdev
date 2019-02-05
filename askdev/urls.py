@@ -17,6 +17,8 @@ urlpatterns = [
     path('api/', include('stories.urls_api')),
     path('api/', include('users.urls_api')),
 
+    path('ckeditor/', include('ckeditor_uploader.urls')),
+
     # users urls
     path('admin/', admin.site.urls),
 ]

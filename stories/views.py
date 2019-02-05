@@ -11,6 +11,7 @@ def stories_home(request):
     }
     return render(request, 'stories/home.html', context)
 
+
 def stories_detail(request, pk):
     story = get_object_or_404(Story, pk=pk)
     return render(request, 'stories/story_detail.html', {'story':story})
