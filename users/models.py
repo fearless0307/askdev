@@ -4,7 +4,6 @@ from questions.models import Question
 from PIL import Image
 
 
-
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profession = models.CharField(max_length=100)
@@ -17,10 +16,23 @@ class Profile(models.Model):
     def __str__(self):
         return f'{self.user.username} Profile'
 
-    def save(self):
+    def save(self, *args, **kwargs):
         super().save()
 
-        
+        profile_img = Image.open(self.profile_image.path)
+
+        if profile_img.height > 300 or profile_img.width > 300:
+            output_size_profile = (300, 300)
+            profile_img.thumbnail(output_size_profile)
+            profile_img.save(self.profile_image.path)
+
+        cover_img = Image.open(self.cover_image.path)
+
+        if cover_img.height > 1200 or cover_img.width > 1200:
+            output_size_cover = (1200, 1200)
+            cover_img.thumbnail(output_size_cover)
+            cover_img.save(self.cover_image.path)
+
 
 # Model for favourite question of user
 class FavouriteQuestion(models.Model):

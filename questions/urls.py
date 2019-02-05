@@ -3,6 +3,7 @@ from questions import views
 # from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
+    path('', views.questions_home, name='questions-home'),
     path('api/reply/', views.Reply_list.as_view()),
     path('api/reply/<int:pk>/', views.Reply_detail.as_view()),
     path('api/questionreaction/', views.QuestionReaction_list.as_view()),
@@ -18,5 +19,5 @@ urlpatterns = [
     path('api/questions/', views.Question_class.as_view(), name='questions'),
     path('api/questions/<int:pk>/', views.Question_Detail_class.as_view(),
          name="question-detail"),
-    path('', include('users.urls')), 
+    path('', include('users.urls')),
 ]
