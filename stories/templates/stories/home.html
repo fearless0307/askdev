@@ -17,11 +17,12 @@
             <img src="{% static 'questions/img/favicon.ico' %}" class="img-fluid rounded-circle">
         </div>
         <div class="col-10 col-md-11">
-            <h2>{{ story.title }}</h2>
-            <h4>{{ story.author }} - {{ story.created_at | date:"F d, Y" }}</h4>
+            <a href="#" class="mr-2">{{ story.author }}</a>
+            <h2><a class="article-title" href="{% url 'story-detail' story.id %}">{{ story.title }}</a></h2>
+            <h6>created on - <strong>{{story.created_at | date:"F d, Y"}}</strong> || last modified at - <strong>{{ story.modified_at | date:"F d, Y" }}</strong></h6>
             <h6><a href="#">#tag1</a> <a href="#">#tag2</a></h6>
-            <p>{{ story.story | safe }}</p>
             <img class="img-fluid rounded" src="{% static 'questions/img/community-back.png' %}">
+            <p>{{ story.story | safe }}</p>
         </div>
     </div>
     <div class="row mt-4">
@@ -35,19 +36,5 @@
         </div>
     </div>
 </div>
-
-
-
-
-<!-- <article class="media content-section">
-    <div class="media-body">
-        <div class="article-metadata">
-            {#<a class="mr-2" href="#">{{ story.author }}</a>#}
-            {#<small class="text-muted">{{ story.created_at | date:"F d, Y" }}</small>#}
-        </div>
-        {#<h2><a class="article-title" href="{% url 'story-detail' story.id %}">{{ story.title }}</a></h2>#}
-        {#<p class="article-content">{{ story.story | safe }}</p>#}
-    </div>
-</article> -->
 {% endfor %}
 {% endblock content %}

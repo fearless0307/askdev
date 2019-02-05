@@ -145,7 +145,6 @@ class StorylistView(ListView):
     model = Story
     template_name = 'questions/home.html'
     context_object_name = 'stories'
-    ordering = ['-created_at']
 
 class StorydetailView(DetailView):
     model = Story
