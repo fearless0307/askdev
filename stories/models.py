@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from questions.models import Reaction, Tag
 from ckeditor.fields import RichTextField
-
+from django.urls import reverse
 
 # Create your models here.
 class Story(models.Model):
@@ -15,6 +15,9 @@ class Story(models.Model):
 
     def __str__(self):
         return f'Author : {self.author} ID : {self.author.id} Title : {self.title}'
+
+    def get_absolute_url(self):
+        return reverse('story-detail', kwargs={'pk': self.pk})
 
 
 class StoryTag(models.Model):

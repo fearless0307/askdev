@@ -1,15 +1,40 @@
-{% extends "stories/base.html" %}
+{% extends "questions/base.html" %}
+{% load static %}
 {% block content %}
-{% for story in stories %}
-<article class="media content-section">
-    <div class="media-body">
-        <div class="article-metadata">
-            <a class="mr-2" href="#">{{ story.author }}</a>
-            <small class="text-muted">{{ story.created_at | date:"F d, Y" }}</small>
-        </div>
-        <h2><a class="article-title" href="#">{{ story.title }}</a></h2>
-        <p class="article-content">{{ story.story | safe }}</p>
+<div class="card bg-white mb-4">
+    <div class="card-body">
+        <h2>Join the discussion</h2>
+        <h4>Comment and be a part of what the internet is talking about!</h4>
+        <button class="btn btn-primary">Join Now!</button>
     </div>
-</article>
+</div>
+
+{% for story in stories %}
+
+<div class="card bg-white mb-4 p-4">
+    <div class="row">
+        <div class="col-2 col-md-1 p-0">
+            <img src="{% static 'questions/img/favicon.ico' %}" class="img-fluid rounded-circle">
+        </div>
+        <div class="col-10 col-md-11">
+            <a href="#" class="mr-2">{{ story.author }}</a>
+            <h2><a class="article-title" href="{% url 'story-detail' story.id %}">{{ story.title }}</a></h2>
+            <h6>created on - <strong>{{story.created_at | date:"F d, Y"}}</strong> || last modified at - <strong>{{ story.modified_at | date:"F d, Y" }}</strong></h6>
+            <h6><a href="#">#tag1</a> <a href="#">#tag2</a></h6>
+            <img class="img-fluid rounded" src="{% static 'questions/img/community-back.png' %}">
+            <p>{{ story.story | safe }}</p>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-8">
+            <button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F 3</button>
+            <button class="btn rounded">&#x1F4AC 3</button>
+        </div>
+        <div class="col-4 text-right">
+            <span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>
+            <span><a href="#"><i class="fas fa-share-alt"></i></a></span>
+        </div>
+    </div>
+</div>
 {% endfor %}
 {% endblock content %}
