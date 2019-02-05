@@ -18,7 +18,7 @@
         </div>
         <div class="col-10 col-md-11">
             <a href="#" class="mr-2">{{ story.author }}</a>
-            <h2><a class="article-title" href="{% url 'story-detail' story.id %}">{{ story.title }}</a></h2>
+            <h2><a class="article-title" href="#">{{ story.title }}</a></h2>
             <h6>created on - <strong>{{story.created_at | date:"F d, Y"}}</strong> || last modified at - <strong>{{ story.modified_at | date:"F d, Y" }}</strong></h6>
             <h6><a href="#">#tag1</a> <a href="#">#tag2</a></h6>
             <img class="img-fluid rounded" src="{% static 'questions/img/community-back.png' %}">
