@@ -4,7 +4,8 @@ from stories.models import Story, StoryTag, StoryReaction
 class StorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Story
-        fields = ('author', 'story', 'created_at','modified_at')
+        # fields = ('author', 'story', 'created_at','modified_at')
+        fields = '__all__'
 
 class StoryTagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,5 +15,6 @@ class StoryTagSerializer(serializers.ModelSerializer):
 class StoryReactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = StoryReaction
-        fields = ('author', 'story', 'reaction')
+        # fields = ('story', 'author', 'reaction')
+        fields = '__all__'
 

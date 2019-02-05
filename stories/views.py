@@ -105,8 +105,9 @@ class StoryReaction_detail(APIView):
             return Http404
 
     def get(self, request, pk, format=None):
-        story_reaction = StoryReaction.objects.get(pk=pk)
-        serializer = StoryReactionSerializer(story_reaction)
+        story_reaction = StoryReaction.objects.filter(story__id=pk).all()
+        print(story_reaction)
+        serializer = StoryReactionSerializer(story_reaction, many=True)
         return Response(serializer.data)
     
     def put(self, request, pk, format=None):
