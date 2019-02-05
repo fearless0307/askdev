@@ -5,6 +5,7 @@ from questions.models import Reaction, Tag
 from ckeditor.fields import RichTextField
 from django.urls import reverse
 
+
 # Create your models here.
 class Story(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
