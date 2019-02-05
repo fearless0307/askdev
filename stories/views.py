@@ -1,5 +1,11 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import (
+    ListView, 
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView)
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from . models import Story
 # Create your views here.
 from rest_framework import status
@@ -137,9 +143,41 @@ def stories_home(request):
 
 class StorylistView(ListView):
     model = Story
-    template_name = 'stories/home.html'
+    template_name = 'questions/home.html'
     context_object_name = 'stories'
     ordering = ['-created_at']
 
 class StorydetailView(DetailView):
     model = Story
+
+class StorycreateView(LoginRequiredMixin, CreateView):
+    model = Story
+    fields = ['title', 'story']
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+class StoryupdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Story
+    fields = ['title', 'story']
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        story = self.get_object()
+        if self.request.user == story.author:
+            return True
+        return False
+
+class StorydeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Story
+    success_url = '/stories/'
+
+    def test_func(self):
+        story = self.get_object()
+        if self.request.user == story.author:
+            return True
+        return False
