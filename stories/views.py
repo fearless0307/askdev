@@ -85,8 +85,9 @@ class StoryTag_detail(APIView):
 
 
 class StoryReaction_list(APIView):
-    def get(self, request, format=None):
-        story_reaction = StoryReaction.objects.all()
+    def get(self, request, pk1, format=None):
+        # diaplay all reaction of a story
+        story_reaction = StoryReaction.objects.filter(story__id=pk1).all()
         serializer = StoryReactionSerializer(story_reaction, many=True)
         return Response(serializer.data)
 
@@ -98,28 +99,28 @@ class StoryReaction_list(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class StoryReaction_detail(APIView):
-    def get_object(self, pk):
+    def get_object(self, pk1, pk2):
         try:
-            return StoryReaction.objects.get(pk=pk)
+            return StoryReaction.objects.filter(id=pk2)
         except StoryReaction.DoesNotExist:
             return Http404
 
-    def get(self, request, pk, format=None):
-        story_reaction = StoryReaction.objects.filter(story__id=pk).all()
+    def get(self, request,pk1, pk2, format=None):
+        story_reaction = StoryReaction.objects.filter(id=pk2)
         print(story_reaction)
-        serializer = StoryReactionSerializer(story_reaction, many=True)
+        serializer = StoryReactionSerializer(story_reaction, many = True)
         return Response(serializer.data)
     
-    def put(self, request, pk, format=None):
-        story_reaction = StoryReaction.objects.get(pk=pk)
+    def put(self, request, pk1, pk2, format=None):
+        story_reaction = StoryReaction.objects.filter(id=pk2)
         serializer = StoryReactionSerializer(story_reaction, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
     
-    def delete(self, request, pk, format=None):
-        story_reaction = StoryReaction.objects.get(pk=pk)
+    def delete(self, request, pk1, pk2, format=None):
+        story_reaction = StoryReaction.objects.filter(id=pk2)
         story_reaction.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 

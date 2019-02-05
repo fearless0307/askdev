@@ -11,3 +11,4 @@ urlpatterns = [
     path('api/story/<int:pk1>/storyreaction/<int:pk2>', views.StoryReaction_detail.as_view()),
 ]
 
+
