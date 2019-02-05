@@ -23,7 +23,7 @@ class Story(models.Model):
 
 class StoryTag(models.Model):
     story = models.ForeignKey(Story, on_delete=models.CASCADE)
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return f'Story : {self.story.id} Tag : {self.tag.id}'

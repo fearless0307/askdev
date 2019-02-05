@@ -1,0 +1,12 @@
+{% extends 'questions/base.html' %}
+{% block content %}
+<h2>New Story</h2>
+<form class="post-form" method="post">
+    {% csrf_token %}
+    {{ story_form.media }}
+    {{ story_form.as_p | safe }}
+    {{ storytag_form.media }}
+    {{ storytag_form.as_p | safe }}
+    <button type="submit">Post</button>
+</form>
+{% endblock %}

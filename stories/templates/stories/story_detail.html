@@ -1,14 +1,13 @@
-{% extends "questions/base.html" %}
+{% extends 'questions/base.html' %}
 {% block content %}
-<article class="media content-section">
-    <div class="media-body">
-        <div class="article-metadata">
-            <a class="mr-2" href="#">{{ object.author }}</a>
-            <small class="text-muted">{{ object.created_at | date:"F d, Y" }}</small>
-            
-        </div>
-        <h2 class="article-title">{{ object.title }}</h2>
-        <p class="article-content">{{ object.story | safe }}</p>
+<div class="card bg-white mb-4 p-4">
+    <div class="col-10 col-md-11">
+        <a href="#" class="mr-2">{{ story.author }}</a>
+        <h2><a class="article-title" href="#">{{ story.title }}</a></h2>
+        <h6><a href="#">#tag1</a> <a href="#">#tag2</a></h6>
+        <p>{{ story.story | safe }}</p>
+        <a href="{% url 'stories-edit' pk=story.pk%}" class="btn btn-default">Edit Story</a>
+        <a href="{% url 'stories-delete' pk=story.pk %}" class="btn btn-default">Delete</a>
     </div>
-</article>
-{% endblock content %}
+</div>
+{% endblock %}
