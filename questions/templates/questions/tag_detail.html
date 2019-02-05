@@ -1,0 +1,21 @@
+{% extends "questions/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="card bg-white mb-4">
+  <div class="card-body">
+    <h1 style="text-align:center;"><a class="article-title"> {{ tag }}</a></h1>
+    {{ detail }}
+  </div>
+</div>
+
+{% for question in questions %}
+
+  <div class="card bg-white mb-4">
+    <div class="card-body">       
+        <!-- <h2><a class="article-title"> {{ question.tag }}</a></h2> -->
+        <h4><a class="article-title"> {{ question.question }}</a></h4>
+    </div>
+  </div>
+  {% endfor %}
+{% endblock content %}
