@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from questions.models import Tag, QuestionTag
+from questions.models import Tag, QuestionTag, Answer
 import wikipedia
 import requests
 
@@ -20,6 +20,12 @@ def tag_detail(request, pk):
     context = {
         'questions': QuestionTag.objects.filter(tag=tag.id),
         'tag': tag.name,
-        'detail': wikipedia.summary(tag.name + 'Programming', sentences=3)
+        # 'detail': wikipedia.summary(tag.name + 'Programming', sentences=3)
     }
     return render(request, 'questions/tag_detail.html', context)
+
+def tag_answer(request, pk):
+    answers = Answer.objects.filter(question=pk)
+    print(answers)
+    context = { 'answers': answers } 
+    return render(request, 'questions/tag_answer.html', context )
