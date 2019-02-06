@@ -1,0 +1,26 @@
+{% load static %}
+
+  <div class="card bg-white mb-4 p-4">
+      <div class="row">
+        <div class="col-2 col-md-1 p-0">
+          <img src="{% static 'questions/img/favicon.ico' %}" class="img-fluid rounded-circle">
+        </div>
+        <div class="col-10 col-md-11">
+          <h2><a href="{% url 'question_detail' object.id%}" style="text-decoration: none">{{object.question}}</a></h2>
+          <h4><a href="{% url 'profile'%}" style="text-decoration: none">{{ object.author_name }}  {{ object.date_posted }}</a></h4>
+          <h6><a href="#">#tag1</a> <a href="#">#tag2</a></h6>
+          <p>{{object.question}}</p>
+          <img class="img-fluid rounded" src="{% static 'questions/img/community-back.png' %}">
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-8">
+          <button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F 3</button>
+          <button class="btn rounded">&#x1F4AC 3</button>
+        </div>
+        <div class="col-4 text-right">
+          <span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>
+          <span><a href="#"><i class="fas fa-share-alt"></i></a></span>
+        </div>
+      </div>
+  </div>
