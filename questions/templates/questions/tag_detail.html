@@ -10,11 +10,12 @@
 </div>
 
 {% for question in questions %}
-
   <div class="card bg-white mb-4">
     <div class="card-body">       
         <!-- <h2><a class="article-title"> {{ question.tag }}</a></h2> -->
-        <h4><a class="article-title"> {{ question.question }}</a></h4>
+        <a class="mr-2" href="#">{{ question.question.author }}</a>
+        <small class="text-muted">{{ question.question.modified_at|date:"F d, Y" }}</small>
+        <h4><a class="article-title"> {{ question.question.question }}</a></h4>
     </div>
   </div>
   {% endfor %}
