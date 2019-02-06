@@ -9,36 +9,6 @@
   </div>
 </div>
 
-{#{% for story in stories %}#}
-{#{% include 'stories/story_card.html' %}#}
-
-<!-- <div class="card bg-white mb-4 p-4">
-    <div class="row">
-        <div class="col-2 col-md-1 p-0">
-            <img src="{% static 'questions/img/favicon.ico' %}" class="img-fluid rounded-circle">
-        </div>
-        <div class="col-10 col-md-11">
-            <a href="#" class="mr-2">{{ story.author }}</a>
-            <h2><a class="article-title" href="#">{{ story.title }}</a></h2>
-            <h6>created on - <strong>{{story.created_at | date:"F d, Y"}}</strong> || last modified at - <strong>{{
-                    story.modified_at | date:"F d, Y" }}</strong></h6>
-            <h6><a href="#">#tag1</a> <a href="#">#tag2</a></h6>
-            <img class="img-fluid rounded" src="{% static 'questions/img/community-back.png' %}">
-            <p>{{ story.story | safe }}</p>
-        </div>
-    </div>
-    <div class="row mt-4">
-        <div class="col-8">
-            <button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F 3</button>
-            <button class="btn rounded">&#x1F4AC 3</button>
-        </div>
-        <div class="col-4 text-right">
-            <span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>
-            <span><a href="#"><i class="fas fa-share-alt"></i></a></span>
-        </div>
-    </div>
-</div> -->
-{#{% endfor %}#}
 {% endblock content %}
 {% block scripts %}
 <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
@@ -46,36 +16,92 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
 <script>
   let stories_url = '{{ stories_url }}';
-  $.ajax({url: stories_url, success: display_stories});
+  let view_type = '{{ view_type }}';
+  $.ajax({
+    url: stories_url,
+    success: display_stories
+  });
 
-  function display_stories(stories){
+  function display_stories(stories) {
     console.log("Showing stories");
     console.log(stories);
+    let stories_html = '';
     stories.forEach(story => {
       let username = '';
       let profile_pic_url = '';
       console.log(story);
       $.ajax({
         url: story.author,
-        success: function(result) {
+        success: function (result) {
           username = result.username;
           profile_pic_url = result.profile_image;
         },
         async: false
       });
-      let d = Date.parse(story.modified_at);
-      console.log(d);
-      story_url = "{% url 'stories-home' %}"+story.id+"/";
+      let modified_at_moment = moment(Date.parse(story.modified_at)).toNow(true) + " ago";
+      console.log(modified_at_moment);
+      story_url = "{% url 'stories-home' %}" + story.id + "/";
       console.log(story_url);
       image_url = "{% static 'questions/img/community-back.png' %}";
-      tags = story.tags.map(x => '<a href="/tags/'+x.tag_name+'/">#'+x.tag_name+'</a>').join(" ");
-      let story_html = '<div class="card bg-white mb-4 p-4"><div class="row"><div class="col-2 col-md-1 p-0"><img src="'+profile_pic_url+'" class="img-fluid rounded-circle"></div><div class="col-6 col-md-8"><h2><a href="'+story_url+'">'+story.title+'</a></h2><h4><a href="#">'+username+'</a> - '+story.modified_at+'</h4><h6>'+tags+'</h6></div><div class="col-4 col-md-3"><img class="img-fluid rounded" src="'+image_url+'"></div></div><div class="row mt-4"><div class="col-8"><button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F 3</button><button class="btn rounded">&#x1F4AC 3</button></div><div class="col-4 text-right"><span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span><span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>'
-      $("#main-body").html($("#main-body").html() + story_html);
+      tags = story.tags.map(x => '<a href="/tags/' + x.tag_name + '/">#' + x.tag_name + '</a>').join(" ");
+      let reactions = new Set();
+      let reaction_score = 0;
+      story.reactions.forEach(element => {
+        reactions.add(element.reaction_name);
+        reaction_score += element.reaction_score;
+      });
+      console.log(reactions);
+      console.log(reaction_score);
+      let story_html = "";
+      switch (view_type) {
+        case "list":
+          story_html = '<div class="card bg-white mb-4 p-4"><div class="row">' +
+            '<div class="col-2 col-md-1 p-0">' +
+            '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle"></div>' +
+            '<div class="col-10 col-md-11">' +
+            '<h2><a href="' + story_url + '">' + story.title + '</a></h2>' +
+            '<h4><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
+            '<h6>' + tags + '</h6></div></div>' +
+            '<div class="row mt-4"><div class="col-8">' +
+            '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F 3</button></div>' +
+            '<div class="col-4 text-right">' +
+            '<span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
+            '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
+          break;
+        case "detail":
+          story_html = '<div class="card bg-white mb-4 p-4">' +
+            '<div class="row"><div class="col-2 col-md-1 p-0">' +
+            '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle"></div>' +
+            '<div class="col-6 col-md-8">' +
+            '<h2><a href="' + story_url + '">' + story.title + '</a></h2>' +
+            '<h4><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
+            '<h6>' + tags + '</h6></div>' +
+            '<div class="col-4 col-md-3"><img class="img-fluid rounded" src="' + image_url + '"></div></div>' +
+            '<div class="row mt-4"><div class="col-8"><button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' +
+            reaction_score + '</button></div>' +
+            '<div class="col-4 text-right"><span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
+            '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
+          break;
+        default:
+          story_html = '<div class="card bg-white mb-4 p-4">' +
+            '<div class="row"><div class="col-2 col-md-1 p-0">' +
+            '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle"></div>' +
+            '<div class="col-10 col-md-11">' +
+            '<h2><a href="' + story_url + '">' + story.title + '</a></h2>' +
+            '<h4><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
+            '<h6>' + tags + '</h6>' +
+            '<p>' + story.story + '</p>' +
+            '<img class="img-fluid rounded" src="' + image_url + '"></div></div>' +
+            '<div class="row mt-4"><div class="col-8">' +
+            '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' + reaction_score + '</button></div>' +
+            '<div class="col-4 text-right">' +
+            '<span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
+            '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
+      }
+      stories_html = stories_html + story_html;
     });
+    $("#main-body").html($("#main-body").html() + stories_html);
   }
-
-
 </script>
-
 
 {% endblock scripts %}

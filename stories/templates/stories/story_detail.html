@@ -6,8 +6,8 @@
         <h2><a class="article-title" href="#">{{ story.title }}</a></h2>
         <h6><a href="#">#{{tags.tag.name}}</a> <a href="#">#tag2</a></h6>
         <p>{{ story.story | safe }}</p>
-        <a href="{% url 'stories-edit' pk=story.pk%}" class="btn btn-default">Edit Story</a>
-        <a href="{% url 'stories-delete' pk=story.pk %}" class="btn btn-default">Delete</a>
+        {#<a href="{% url 'stories-edit' pk=story.pk%}" class="btn btn-default">Edit Story</a>#}
+        {#<a href="{% url 'stories-delete' pk=story.pk %}" class="btn btn-default">Delete</a>#}
     </div>
 </div>
 {% endblock %}
