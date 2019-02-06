@@ -24,14 +24,14 @@ def stories_create(request):
     if request.method == 'POST':
         story_form = StoryForm(request.POST)
         storytag_form = StoryTagForm(request.POST)
-        if story_form.is_valid(): # storytag_form.is_valid():
+        if story_form.is_valid() and storytag_form.is_valid():
             story_post = story_form.save(commit=False)
             storytag_post = storytag_form.save(commit=False)
             story_post.author = request.user
             story_post.created_at = timezone.now()
             story_post.save()
+            storytag_post.story_id = story_post.id
             storytag_post.save()
-            # return redirect('stories-detail', pk=story_post.pk)
             return redirect('stories-home')
     else:
         story_form = StoryForm()
@@ -41,6 +41,7 @@ def stories_create(request):
             'storytag_form': storytag_form
         }
     return render(request, 'stories/story_create.html', context)#{'story_form': story_form})
+
 
 
 def stories_edit(request, pk):
