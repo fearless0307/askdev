@@ -72,6 +72,7 @@ TEMPLATES = [
             ],
         },
     },
+    
 ]
 
 WSGI_APPLICATION = 'askdev.wsgi.application'

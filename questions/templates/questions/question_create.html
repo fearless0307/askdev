@@ -1,0 +1,30 @@
+{% extends "questions/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+        <form class="was-validated" method="POST">
+            {% csrf_token %}
+            <!--
+                The csrf_token is a special tag which Django uses to prevent CSRF (Cross-Site Request Forgery) attacks
+            -->
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Post Question</legend>
+                {{ form|crispy }}
+                
+                    <div class="mb-3">
+                        <label for="validationTextarea">Textarea</label>
+                        <textarea class="form-control is-invalid" rows="5" name="question" id="validationTextarea" placeholder="Required example textarea" required></textarea>
+                        <div class="invalid-feedback">
+                        Please enter a Question in the textarea.
+                        </div>
+                    </div>
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Post</button>
+            </div>
+
+        </form>
+        
+    </div>
+
+{% endblock content %}
