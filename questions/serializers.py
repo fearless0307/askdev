@@ -32,11 +32,13 @@ class QuestionSerializer(serializers.HyperlinkedModelSerializer):
     tags =\
         serializers.HyperlinkedIdentityField(view_name='question-tags')
 
+    author_name = serializers.ReadOnlyField(source='author.username', read_only=True)
+    author_id = serializers.ReadOnlyField(source='author.id', read_only=True)
+
     class Meta:
         model = Question
-        fields = ['url', 'id', 'author', 'question', 'description',
-                  'created_at', 'modified_at', 'answers',
-                  'questionreaction_set', 'tags']
+        fields = ['url', 'id', 'author','author_name', 'author_id', 'question', 'created_at',
+                  'modified_at', 'answers','questionreaction_set', 'tags']
 
 
 class AnswerSerializer(serializers.HyperlinkedModelSerializer):
@@ -45,9 +47,12 @@ class AnswerSerializer(serializers.HyperlinkedModelSerializer):
             lookup_fields=(('question_id', 'qid'), ('id', 'pk')),
             read_only=True)
 
+    author_name = serializers.ReadOnlyField(source='author.username', read_only=True)
+    author_id = serializers.ReadOnlyField(source='author.id', read_only=True)
+
     class Meta:
         model = Answer
-        fields = ('url', 'question', 'id', 'author', 'answer', 'is_satisfied',
+        fields = ('url', 'question', 'id', 'author', 'author_id', 'author_name', 'answer', 'is_satisfied',
                   'modified_at', 'created_at', 'reply_set')
 
 
@@ -70,9 +75,10 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class QuestionTagSerializer(serializers.HyperlinkedModelSerializer):
+    # question_id = serializers.ReadOnlyField(source='question', read_only=True)
     class Meta:
         model = QuestionTag
-        fields = '__all__'
+        fields = ('question','tag', )
 
 
 class ReactionSerializer(serializers.HyperlinkedModelSerializer):

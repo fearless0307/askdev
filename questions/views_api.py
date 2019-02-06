@@ -102,7 +102,7 @@ class Tags_detail(APIView):
 class QuestionTag_list(APIView):
     def get(self, request, pk, format=None):
         question_tag = QuestionTag.objects.filter(question_id=pk).all()
-        serializer = QuestionTagSerializer(question_tag, many=True)
+        serializer = QuestionTagSerializer(question_tag, context={'request': request},  many=True)
         return Response(serializer.data)
 
 
@@ -118,6 +118,12 @@ class QuestionTag_detail(APIView):
         serializer = QuestionTagSerializer(question_tag)
         return Response(serializer.data)
 
+class Tags_questions(APIView):
+   def get(self, request, pk, format=None):
+       questions = QuestionTag.objects.select_related('question').filter(tag_id=pk).all()
+       serializer = QuestionTagSerializer(questions, context={'request': request},
+                               many=True)
+       return Response(serializer.data)
 
 class Answer_list(APIView):
     def get(self, request, pk, format=None):
