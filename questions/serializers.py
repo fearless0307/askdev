@@ -25,17 +25,28 @@ class ParameterisedHyperlinkedIdentityField\
         return reverse(view_name, kwargs=kwargs, request=request,
                        format=format)
 
+class QuestionTagSerializer(serializers.HyperlinkedModelSerializer):
+    # question_id = serializers.ReadOnlyField(source='question', read_only=True)
+    tag_name = serializers.ReadOnlyField(source='tag.name', read_only=True)
+
+    class Meta:
+        model = QuestionTag
+        fields = ('question','tag','tag_name' )
+
 
 class QuestionSerializer(serializers.HyperlinkedModelSerializer):
     answers =\
         serializers.HyperlinkedIdentityField(view_name='question-answers')
-    tags =\
-        serializers.HyperlinkedIdentityField(view_name='question-tags')
+    # tags =\
+    #     serializers.HyperlinkedIdentityField(view_name='question-tags')
 
     author_name = serializers.ReadOnlyField(source='author.username', read_only=True)
     author_id = serializers.ReadOnlyField(source='author.id', read_only=True)
 
+    tags = QuestionTagSerializer(source='questiontag_set', many=True)
+
     class Meta:
+        many=True
         model = Question
         fields = ['url', 'id', 'author','author_name', 'author_id', 'question', 'created_at',
                   'modified_at', 'answers','questionreaction_set', 'tags']
@@ -74,11 +85,7 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('name',)
 
 
-class QuestionTagSerializer(serializers.HyperlinkedModelSerializer):
-    # question_id = serializers.ReadOnlyField(source='question', read_only=True)
-    class Meta:
-        model = QuestionTag
-        fields = ('question','tag', )
+
 
 
 class ReactionSerializer(serializers.HyperlinkedModelSerializer):
