@@ -10,7 +10,6 @@
 </div>
 
 {% for story in stories %}
-
 <div class="card bg-white mb-4 p-4">
     <div class="row">
         <div class="col-2 col-md-1 p-0">
@@ -20,7 +19,11 @@
             <a href="#" class="mr-2">{{ story.author }}</a>
             <h2><a class="article-title" href="#">{{ story.title }}</a></h2>
             <h6>created on - <strong>{{story.created_at | date:"F d, Y"}}</strong> || last modified at - <strong>{{ story.modified_at | date:"F d, Y" }}</strong></h6>
-            <h6><a href="#">#tag1</a> <a href="#">#tag2</a></h6>
+            {% for tag in tags %}
+            {% if tag.story_id == story.id %}
+            <h6><a href="#">#{{tag.tag.name}}</a></h6>
+            {% endif %}
+            {% endfor %}
             <img class="img-fluid rounded" src="{% static 'questions/img/community-back.png' %}">
             <p>{{ story.story | safe }}</p>
         </div>

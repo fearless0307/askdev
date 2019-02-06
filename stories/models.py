@@ -19,7 +19,7 @@ class Story(models.Model):
                ' Title : {self.title}'
 
     def get_absolute_url(self):
-        return reverse('story-detail', kwargs={'pk': self.pk})
+        return reverse('stories-detail', kwargs={'pk': self.pk})
 
 
 class StoryTag(models.Model):
@@ -27,7 +27,7 @@ class StoryTag(models.Model):
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE, blank=True)
 
     def __str__(self):
-        return f'Story : {self.story.id} Tag : {self.tag.id}'
+        return f'Story : {self.story.id} author: {self.story.author} Tag : {self.tag.name}'
 
 
 class StoryReaction(models.Model):
