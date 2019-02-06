@@ -13,10 +13,11 @@ class StoryTagSerializer(serializers.HyperlinkedModelSerializer):
 
 class StoryReactionSerializer(serializers.HyperlinkedModelSerializer):
     reaction_name = serializers.ReadOnlyField(source='reaction.name', read_only=True)
+    reaction_score = serializers.ReadOnlyField(source='reaction.score', read_only=True)
 
     class Meta:
         model = StoryReaction
-        fields = ('story', 'author', 'reaction', 'reaction_name')
+        fields = ('story', 'author', 'reaction', 'reaction_name', 'reaction_score')
 
 
 class StorySerializer(serializers.HyperlinkedModelSerializer):

@@ -6,9 +6,10 @@ from questions.models import Question
 
 
 def questions_home(request):
-    response = requests.get('http://127.0.0.1:8000/api/questions/')
+    url = 'http://127.0.0.1:8000/api/questions/'
+    response = requests.get(url)
     api_data = response.json()
-    return render(request, 'questions/home.html', {'questions': api_data,'requests':requests})
+    return render(request, 'questions/home.html', {'questions': api_data,'url':questions_url})
 
 
 def question_detail(request,pk):

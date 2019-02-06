@@ -120,8 +120,10 @@ class QuestionTag_detail(APIView):
 
 class Tags_questions(APIView):
    def get(self, request, pk, format=None):
-       questions = QuestionTag.objects.select_related('question').filter(tag_id=pk).all()
-       serializer = QuestionTagSerializer(questions, context={'request': request},
+       qid = QuestionTag.objects.values_list('question_id', flat=True).filter(tag_id=pk).all()
+       questions = Question.objects.filter(id__in=qid).all()
+    #    print("auhot_tag=",qid,questions)
+       serializer = QuestionSerializer(questions, context={'request': request},
                                many=True)
        return Response(serializer.data)
 
