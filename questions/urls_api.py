@@ -30,7 +30,7 @@ urlpatterns = [
     # tag api
     path('tags/', views.Tags_list.as_view(),name ='tag'),
     path('tags/<int:pk>/', views.Tags_detail.as_view(),name ='tag-detail'),
-     path('tags/<int:pk>/questions', views.Tags_questions.as_view(),name ='tags-question-detail'),
+    path('tags/<int:pk>/questions', views.Tags_questions.as_view(),name ='tags-question-detail'),
 
     # reply api
     path('replies/', views.Reply_list.as_view()),
