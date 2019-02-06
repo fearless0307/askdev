@@ -11,14 +11,14 @@ def tag_home(request):
     return render(request, 'questions/tag.html', context)
 
 def tag_detail(request, pk):
-    tag= Tag.objects.filter(pk=pk).first()
+    tag= Tag.objects.filter(name=pk).first()
 
     # response = requests.get('http://127.0.0.1:8000/api/questions/'+ str(pk)+'/')
     # api_data = response.json()
     # print(api_data)
 
     context = {
-        'questions': QuestionTag.objects.filter(tag=pk),
+        'questions': QuestionTag.objects.filter(tag=tag.id),
         'tag': tag.name,
         'detail': wikipedia.summary(tag.name + 'Programming', sentences=3)
     }

@@ -2,9 +2,9 @@
 {% load static %}
 {% block content %}
   <div class="card bg-white mb-4">
-    <div class="card-body">
+    <div class="card-body" style="display:flex; justify-content:space-around">
         {% for tag in tags %}
-        <a class="article-title" href="{% url 'tag-detail' tag.id %}"> {{ tag.name }}</a>
+        <a href="{% url 'tag-detail' tag.name %}"> {{ tag.name }}</a>
         {% endfor %}
        
     </div>
