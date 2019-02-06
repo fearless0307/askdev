@@ -1,25 +1,14 @@
-{% extends "questions/base.html" %}
 {% load static %}
-{% block content %}
-<div class="card bg-white mb-4">
-    <div class="card-body">
-        <h2>Join the discussion</h2>
-        <h4>Comment and be a part of what the internet is talking about!</h4>
-        <button class="btn btn-primary">Join Now!</button>
-    </div>
-</div>
-
-{% for story in stories %}
-
 <div class="card bg-white mb-4 p-4">
     <div class="row">
         <div class="col-2 col-md-1 p-0">
-            <img src="{% static 'questions/img/favicon.ico' %}" class="img-fluid rounded-circle">
+            <img src="{{ story.author.profile_pic.url }}" class="img-fluid rounded-circle">
         </div>
         <div class="col-10 col-md-11">
-            <a href="#" class="mr-2">{{ story.author }}</a>
+            <a href="#" class="mr-2">{{ story.author.name }}</a>
             <h2><a class="article-title" href="#">{{ story.title }}</a></h2>
-            <h6>created on - <strong>{{story.created_at | date:"F d, Y"}}</strong> || last modified at - <strong>{{ story.modified_at | date:"F d, Y" }}</strong></h6>
+            <h6>created on - <strong>{{story.created_at | date:"F d, Y"}}</strong> || last modified at - <strong>{{
+                    story.modified_at | date:"F d, Y" }}</strong></h6>
             <h6><a href="#">#tag1</a> <a href="#">#tag2</a></h6>
             <img class="img-fluid rounded" src="{% static 'questions/img/community-back.png' %}">
             <p>{{ story.story | safe }}</p>
@@ -36,5 +25,3 @@
         </div>
     </div>
 </div>
-{% endfor %}
-{% endblock content %}

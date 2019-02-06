@@ -3,24 +3,34 @@ from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from stories.models import Story, StoryTag
 from stories.forms import StoryForm, StoryTagForm
+from django.urls import reverse
+import requests
 
 
 def stories_home(request):
+    stories_url = request.build_absolute_uri(reverse('story-list'))
+    # response = requests.get(request.build_absolute_uri(reverse('story-list')))
+    # stories = response.json()
+    # context = {
+    #     'stories': Story.objects.all().order_by('-created_at'),
+    # }
     context = {
-        'stories': Story.objects.all().order_by('-created_at'),
+        'title': 'Stories',
+        'stories_url': stories_url,
     }
-    return render(request, 'stories/home.html', context)
+    return render(request, 'stories/stories.html', context)
 
 
 def stories_detail(request, pk):
     story = get_object_or_404(Story, pk=pk)
-    return render(request, 'stories/story_detail.html', {'story':story})
+    return render(request, 'stories/story_detail.html', {'story': story})
+
 
 def stories_create(request):
     if request.method == 'POST':
         story_form = StoryForm(request.POST)
         storytag_form = StoryTagForm(request.POST)
-        if story_form.is_valid(): # storytag_form.is_valid():
+        if story_form.is_valid():  # storytag_form.is_valid():
             story_post = story_form.save(commit=False)
             storytag_post = storytag_form.save(commit=False)
             story_post.author = request.user
@@ -52,6 +62,7 @@ def stories_edit(request, pk):
     else:
         story_form = StoryForm(instance=story)
     return render(request, 'stories/story_edit.html', {'story_form':story_form})
+
 
 def stories_delete(request, pk):
     story = Story.objects.get(pk=pk).delete()

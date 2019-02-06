@@ -29,7 +29,7 @@ urlpatterns = [
     path('questiontag/<int:pk>/', views.QuestionTag_detail.as_view()),
     # tag api
     path('tag/', views.Tags_list.as_view()),
-    path('tag/<int:pk>/', views.Tags_detail.as_view()),
+    path('tag/<int:pk>/', views.Tags_detail.as_view(), name="tag-detail"),
     # reply api
     path('reply/', views.Reply_list.as_view()),
     path('reply/<int:pk>/', views.Reply_detail.as_view()),
