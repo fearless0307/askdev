@@ -141,7 +141,7 @@
           </div>
         </div>
       </div>
-      <div class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-8">
+      <div class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-8" id="main-body">
 
         {% if messages %}
         {% for message in messages %}
@@ -150,7 +150,7 @@
         </div>
         {% endfor %}
         {% endif %}
-        {% block content %}{% endblock %}
+        {% block content %}{% endblock content %}
 
       </div>
     </div>
@@ -165,6 +165,8 @@
     crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
     crossorigin="anonymous"></script>
+
+  {% block scripts %}{% endblock scripts %}
 </body>
 
 </html>

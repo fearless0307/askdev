@@ -3,15 +3,23 @@ from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from stories.models import Story, StoryTag
 from stories.forms import StoryForm, StoryTagForm
+from django.urls import reverse
+import requests
 from questions.models import Tag
 from django.http import HttpResponse
 
 def stories_home(request):
+    stories_url = request.build_absolute_uri(reverse('story-list'))
+    # response = requests.get(request.build_absolute_uri(reverse('story-list')))
+    # stories = response.json()
+    # context = {
+    #     'stories': Story.objects.all().order_by('-created_at'),
+    # }
     context = {
-        'stories': Story.objects.all().order_by('-created_at'),
-        'tags': StoryTag.objects.all()
+        'title': 'Stories',
+        'stories_url': stories_url,
     }
-    return render(request, 'stories/home.html', context)
+    return render(request, 'stories/stories.html', context)
 
 
 def stories_detail(request, pk):
@@ -20,6 +28,7 @@ def stories_detail(request, pk):
         'tags' : get_object_or_404(StoryTag, story_id=pk)
     }
     return render(request, 'stories/story_detail.html', context)
+
 
 def stories_create(request):
     if request.method == 'POST':
@@ -58,6 +67,7 @@ def stories_edit(request, pk):
     else:
         story_form = StoryForm(instance=story)
     return render(request, 'stories/story_edit.html', {'story_form':story_form})
+
 
 def stories_delete(request, pk):
     story = Story.objects.get(pk=pk).delete()

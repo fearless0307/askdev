@@ -10,7 +10,8 @@ from django.urls import reverse
 class Story(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100, null=True)
-    story = RichTextUploadingField(blank=True, null=True)
+    story = RichTextUploadingField(blank=True, null=True,
+                                   )
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
