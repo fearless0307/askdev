@@ -1,0 +1,12 @@
+{% extends "questions/base.html" %}
+{% load static %}
+{% block content %}
+  <div class="card bg-white mb-4">
+    <div class="card-body" style="display:flex; justify-content:space-around">
+        {% for tag in tags %}
+        <a href="{% url 'tag-detail' tag.name %}"> {{ tag.name }}</a>
+        {% endfor %}
+       
+    </div>
+  </div>
+{% endblock content %}
