@@ -10,5 +10,8 @@ urlpatterns = [
 
     path('tags/',views_tag.tag_home, name = 'tag-home'),
     path('tags/<str:pk>/',views_tag.tag_detail, name='tag-detail'),
-    path('tags/answers/<str:pk>',views_tag.tag_answer, name='tag-answer')
+    path('tags/answers/<str:pk>',views_tag.tag_answer, name='tag-answer'),
+
+    path('testing/',views_tag.testing, name = 'testing'),
+
 ]

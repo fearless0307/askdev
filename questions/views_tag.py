@@ -29,3 +29,7 @@ def tag_answer(request, pk):
     print(answers)
     context = { 'answers': answers } 
     return render(request, 'questions/tag_answer.html', context )
+
+
+def testing(request):
+     return render(request, 'questions/testing.html')
