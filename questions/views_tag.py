@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from questions.models import Tag, QuestionTag
+from questions.models import Tag, QuestionTag, Answer
 import wikipedia
 import requests
+from django.contrib.auth.decorators import login_required
 
 
 def tag_home(request):
@@ -23,3 +24,13 @@ def tag_detail(request, pk):
         # 'detail': wikipedia.summary(tag.name + 'Programming', sentences=3)
     }
     return render(request, 'questions/tag_detail.html', context)
+
+def tag_answer(request, pk):
+    answers = Answer.objects.filter(question=pk)
+    print(answers)
+    context = { 'answers': answers } 
+    return render(request, 'questions/tag_answer.html', context )
+
+
+def testing(request):
+     return render(request, 'questions/testing.html')

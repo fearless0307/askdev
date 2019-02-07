@@ -11,23 +11,22 @@ from django.contrib.auth.decorators import login_required
 
 
 def stories_home(request):
+    view_type = request.GET.get('view', 'card')
+    print(view_type)
     stories_url = request.build_absolute_uri(reverse('story-list'))
-    # response = requests.get(request.build_absolute_uri(reverse('story-list')))
-    # stories = response.json()
-    # context = {
-    #     'stories': Story.objects.all().order_by('-created_at'),
-    # }
     context = {
         'title': 'Stories',
         'stories_url': stories_url,
+        'view_type': view_type,
     }
     return render(request, 'stories/stories.html', context)
 
 
 def stories_detail(request, pk):
+    story_url = request.build_absolute_uri(reverse('story-detail', kwargs={'pk': pk}))
     context = {
-        'story' : get_object_or_404(Story, pk=pk),
-        'tags' : get_object_or_404(StoryTag, story_id=pk)
+        'title': 'Story',
+        'story_url': story_url
     }
     return render(request, 'stories/story_detail.html', context)
 

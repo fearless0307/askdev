@@ -40,7 +40,7 @@ class User_Detail_class(APIView):
     def get(self, request, pk, format=None):
         user = self.get_object(pk)
         user_serializer = UserSerializer(user, context={'request': request})
-        profile = Profile.objects.filter(id=pk).first()
+        profile = Profile.objects.filter(user_id=pk).first()
         if profile is not None:
             profile_serializer =\
                 ProfileSerializer(profile, context={'request': request})
@@ -94,3 +94,13 @@ class User_Question_Detail_class(APIView):
             QuestionSerializer(questions, context={'request': request},
                                many=True)
         return Response(serializer.data)
+
+
+class User_FavouriteQuestion_Detail(APIView):
+    def get(self, request, pk, format=None):
+       qid = FavouriteQuestion.objects.values_list('question_id', flat=True).filter(author_id=pk).all()
+       questions = Question.objects.filter(id__in=qid).all()
+    #    print("auhot_tag=",qid,questions)
+       serializer = QuestionSerializer(questions, context={'request': request},
+                               many=True)
+       return Response(serializer.data)

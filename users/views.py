@@ -42,3 +42,8 @@ def profile(request):
     return render(request, 'users/profile.html', context)
 
 
+@login_required
+def fav_questions(request):
+    print(request.user)
+    return render(request, 'users/fav_questions.html')
+
