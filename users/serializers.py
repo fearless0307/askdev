@@ -1,7 +1,7 @@
-from rest_framework import serializers
-from users.models import Profile, FavouriteQuestion
-from rest_framework import request
+from rest_framework import serializers, request
 from django.contrib.auth.models import User
+
+from users.models import Profile, FavouriteQuestion
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -21,4 +21,4 @@ class FavouriteQuestionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = FavouriteQuestion
-        fileds = ('question','author')
+        fileds = ('question', 'author')

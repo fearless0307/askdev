@@ -1,9 +1,10 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.urls import reverse
+
 from questions.models import Reaction, Tag
 from ckeditor_uploader.fields import RichTextUploadingField
-from django.urls import reverse
 
 
 # Create your models here.
@@ -16,7 +17,8 @@ class Story(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'Author : {self.author} Author ID : {self.author.id} Story ID : {self.id}'
+        return f'Author : {self.author} Author ID : '\
+               '{self.author.id} Story ID : {self.id}'
 
     def get_absolute_url(self):
         return reverse('stories-detail', kwargs={'pk': self.pk})
@@ -27,7 +29,8 @@ class StoryTag(models.Model):
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE, blank=True)
 
     def __str__(self):
-        return f'Story : {self.story.id} author: {self.story.author} Tag : {self.tag.name}'
+        return f'Story : {self.story.id} author: '\
+               '{self.story.author} Tag : {self.tag.name}'
 
 
 class StoryReaction(models.Model):
@@ -36,4 +39,5 @@ class StoryReaction(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'User {self.author} : Story {self.story.id} : Reaction-score {self.reaction.score} ID {self.id}'
+        return f'User {self.author} : Story ID {self.story.id} '\
+               ': Reaction-score {self.reaction.score} ID {self.id}'

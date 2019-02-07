@@ -1,5 +1,6 @@
 {% extends "questions/base.html" %}
 {% load static %}
+
 {% block views %}
 <div class="container-fluid bg-white py-2">
   <div class="row">
@@ -30,6 +31,7 @@
 </div>
 <!-- \ View -->
 {% endblock views %}
+
 {% block content %}
 <div class="card bg-white mb-4">
   <div class="card-body">
@@ -38,8 +40,8 @@
     <button class="btn btn-primary">Join Now!</button>
   </div>
 </div>
-
 {% endblock content %}
+
 {% block scripts %}
 <script>
   let stories_url = '{{ stories_url }}';
@@ -70,7 +72,8 @@
       story_url = "{% url 'stories-home' %}" + story.id + "/";
       console.log(story_url);
       image_url = "{% static 'questions/img/community-back.png' %}";
-      tags = story.tags.map(x => '<a class="badge badge-pill badge-info" href="/tags/' + x.tag_name + '/stories/">' + x.tag_name + '</a>').join(" ");
+      tags = story.tags.map(x => '<a class="badge badge-pill badge-info" href="/tags/' + x.tag_name + '/stories/">' +
+        x.tag_name + '</a>').join(" ");
       let reactions = new Set();
       let reaction_score = 0;
       story.reactions.forEach(element => {
@@ -87,19 +90,14 @@
       var firstImage = '';
       console.log(allImage);
       for (var i = 0; i < allImage.length; i++) {
-        if (allImage[i].src.indexOf("/media/uploads/") >= 0){
-            firstImage = allImage[i].src;
-            break;
+        if (allImage[i].src.indexOf("/media/uploads/") >= 0) {
+          firstImage = allImage[i].src;
+          break;
         }
       }
-      // var imgSrc = firstImage ? firstImage.src : "";
       console.log(firstImage);
-      // or, if you want the unresolved src, as it appears in the original HTML:
-      // var rawImgSrc = firstImage ? firstImage.getAttribute("src") : "";
-      // console.log(rawImgSrc);
 
-      var story_story = div.innerHTML.replace(/<img alt="" src="\/m[^>]*>/g,"");
-
+      var story_story = div.innerHTML.replace(/<img alt="" src="\/m[^>]*>/g, "");
 
       switch (view_type) {
         case "list":
@@ -111,7 +109,7 @@
             '<h4><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
             '<h6>' + tags + '</h6></div></div>' +
             '<div class="row mt-4"><div class="col-8">' +
-            '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F '+reaction_score+'</button></div>' +
+            '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' + reaction_score + '</button></div>' +
             '<div class="col-4 text-right">' +
             '<span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
             '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
@@ -146,7 +144,6 @@
             '<span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
             '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
       }
-      // console.log( $('.story-body img').attr('src') );
       stories_html = stories_html + story_html;
     });
     $("#main-body").html($("#main-body").html() + stories_html);
