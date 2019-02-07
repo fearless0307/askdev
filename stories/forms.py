@@ -8,11 +8,20 @@ class StoryForm(forms.ModelForm):
         model = Story
         fields = ('title', 'story',)
 
-class StoryTagForm(forms.ModelForm):
+# class StoryTagForm(forms.Form):
 
-    class Meta:
-        model = StoryTag
-        fields = ('tag',)
+#     OPTIONS = Tag.objects.values_list('id', 'name')
+#     print(OPTIONS)
+
+#     OPTIONS_ = tuple([option for option in OPTIONS])
+#     print(OPTIONS_)
+
+#     tags = forms.MultipleChoiceField(widget=forms.SelectMultiple(attrs={'class': "form-control"}),
+#                                              choices=OPTIONS_, )
+
+#     # class Meta:
+#     #     model = StoryTag
+#     #     fields = ('tag',)
 
 class StoryReactionForm(forms.ModelForm):
 

@@ -3,7 +3,7 @@ from questions.models import Question, Reply, QuestionReaction, Tag,\
     QuestionTag, Answer, Reaction
 from questions.serializers import QuestionSerializer, AnswerSerializer,\
     ReplySerializer, QuestionReactionSerializer, TagSerializer,\
-    ReactionSerializer,  QuestionTagSerializer
+    ReactionSerializer,  QuestionTagSerializer, TagDataSerializer
 
 from stories.serializers import StoryTagSerializer
 from django.http import Http404, HttpResponse
@@ -90,6 +90,13 @@ class Tags_list(APIView):
     def get(self, request, format=None):
         tags = Tag.objects.all()
         serializer = TagSerializer(tags, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
+class Tags_data_list(APIView):
+    def get(self, request, format=None):
+        tags = Tag.objects.all()
+        serializer = TagDataSerializer(tags, many=True)
         return Response(serializer.data)
 
 

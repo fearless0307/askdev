@@ -20,6 +20,7 @@ urlpatterns = [
     # path('questiontags/<int:pk>/', views.QuestionTag_detail.as_view(),name ='questiontag-detail'),
     # tag api
     path('tags/', views.Tags_list.as_view(),name ='tag'),
+    path('tags/data/', views.Tags_data_list.as_view(),name ='tag-data'),
     path('tags/<str:name>/', views.Tags_detail.as_view(),name ='tag-detail'),
     path('tags/<str:name>/questions/', views.Tags_questions.as_view(),name ='tag-question-detail'),
     # reply api
