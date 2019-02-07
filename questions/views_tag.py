@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from questions.models import Tag, QuestionTag
-import wikipedia
+# import wikipedia
 import requests
 
 
