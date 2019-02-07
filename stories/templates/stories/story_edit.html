@@ -1,12 +1,29 @@
 {% extends 'questions/base.html' %}
 {% load crispy_forms_tags %}
+{% block css %}
+<style>
+  #cke_id_story {
+  width: 100% !important;
+}
+.django-ckeditor-widget {
+  width: 100% !important;
+}
+</style>
+{% endblock css %}
 {% block content %}
-<h2>Update Post</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ story_form.media }}
-    {{ story_form | crispy }}
-    <button type="submit">Save</button>
-</form>
-<script src="//cdn.ckeditor.com/4.11.2/full/ckeditor.js"></script>
+<div class="card bg-white">
+  <div class="card-header">
+    <h2>Edit Story</h2>
+  </div>
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+      {{ story_form.media }}
+      {{ story_form | crispy }}
+      <div class="text-right">
+        <button type="submit" class="btn btn-warning"><i class="far fa-edit"></i> Save</button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}

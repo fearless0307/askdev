@@ -2,12 +2,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from stories.models import Story, StoryTag, StoryReaction
-from stories.forms import StoryForm, StoryTagForm, StoryReactionForm
+from stories.forms import StoryForm, StoryReactionForm
 from django.urls import reverse
 import requests
 from questions.models import Tag
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 def stories_home(request):
@@ -35,24 +36,31 @@ def stories_detail(request, pk):
 def stories_create(request):
     if request.method == 'POST':
         story_form = StoryForm(request.POST)
-        storytag_form = StoryTagForm(request.POST)
-        if story_form.is_valid() and storytag_form.is_valid():
+        # storytag_form = StoryTagForm(request.POST)
+        if story_form.is_valid():
             story_post = story_form.save(commit=False)
-            storytag_post = storytag_form.save(commit=False)
             story_post.author = request.user
-            story_post.created_at = timezone.now()
             story_post.save()
-            storytag_post.story_id = story_post.id
-            storytag_post.save()
+            tag_ids = request.POST.get('tags').split(',')
+            print(tag_ids)
+            for tag_id in tag_ids:
+                story_tag = StoryTag(tag_id=tag_id, story_id=story_post.id)
+                story_tag.save()
+            # story_post.created_at = timezone.now()
+            # storytag_post.story_id = story_post.id
+            # storytag_post.save()
+            messages.success(request, f'Your story has been added!', extra_tags='success')
             return redirect('stories-home')
+        else:
+            messages.error(request, f'Something went wrong!', extra_tags='danger')
     else:
         story_form = StoryForm()
-        storytag_form = StoryTagForm()
+        # storytag_form = StoryTagForm()
         context = {
             'story_form': story_form,
-            'storytag_form': storytag_form
+            # 'storytag_form': storytag_form
         }
-    return render(request, 'stories/story_create.html', context)#{'story_form': story_form})
+    return render(request, 'stories/story_create.html', context)
 
 
 @login_required

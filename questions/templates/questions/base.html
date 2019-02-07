@@ -20,6 +20,8 @@
 
   <link rel="stylesheet" href="{% static 'questions/css/style.css' %}">
 
+  {% block css %}{% endblock css %}
+
   {% if title %}
   <title>Askdev - {{ title }}</title>
   {% else %}

@@ -37,6 +37,22 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
         }
 
 
+class TagDataSerializer(serializers.ModelSerializer):
+    text = serializers.SerializerMethodField('get_name')
+    value = serializers.SerializerMethodField('get_id')
+
+    class Meta:
+        model = Tag
+        fields = ('text', 'value')
+
+    def get_name(self, obj):
+        return obj.name
+
+    def get_id(self, obj):
+        return obj.id
+    
+
+
 class ReactionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Reaction
