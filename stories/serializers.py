@@ -9,6 +9,9 @@ class StoryTagSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = StoryTag
         fields = ('story', 'tag', 'tag_name')
+        extra_kwargs = {
+            'tag': {'lookup_field': 'name'}
+        }
 
 
 class StoryReactionSerializer(serializers.HyperlinkedModelSerializer):

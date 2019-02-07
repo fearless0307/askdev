@@ -4,11 +4,27 @@ from questions.models import Question, Reply, QuestionReaction, Tag,\
 from questions.serializers import QuestionSerializer, AnswerSerializer,\
     ReplySerializer, QuestionReactionSerializer, TagSerializer,\
     ReactionSerializer,  QuestionTagSerializer
-from django.http import Http404
+
+from stories.serializers import StoryTagSerializer
+from django.http import Http404, HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework import request, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from stories.models import StoryTag
+from django.urls import reverse
+
+
+def all_api(request):
+    html = "<html><body><ul>"\
+           "<h1>All APIs</h1>"\
+           "<li><h3><a href="+reverse('users')+">Users</a></h3></li>"\
+           "<li><h3><a href="+reverse('questions')+">Questions</a></h3></li>"\
+           "<li><h3><a href="+reverse('story-list')+">Stories</a></h3></li>"\
+           "<li><h3><a href="+reverse('reactions')+">Reactions</a></h3></li>"\
+           "<li><h3><a href="+reverse('tag')+">Tags</a></h3></li>"\
+           "</ul></body></html>"
+    return HttpResponse(html)
 
 
 class Question_class(APIView):
@@ -34,13 +50,6 @@ class Question_Detail_class(APIView):
         return Response(serializer.data)
 
 
-class Reply_list(APIView):
-    def get(self, request, qid, pk, format=None):
-        reply = Reply.objects.filter(answer_id=pk).all()
-        serializer = ReplySerializer(reply,context={'request': request},many=True)
-        return Response(serializer.data)
-
-
 class Reply_detail(APIView):
     def get_object(self, pk):
         try:
@@ -54,78 +63,56 @@ class Reply_detail(APIView):
         return Response(serializer.data)
 
 
-class QuestionReaction_list(APIView):
-    def get(self, request, pk, format=None):
-
-        reaction = QuestionReaction.objects.filter(question_id=pk).all()
-        print("reaction =", pk, reaction)
-        serializer = QuestionReactionSerializer(reaction,
-                                                context={'request': request},
-                                                many=True)
-        return Response(serializer.data)
+# class QuestionReaction_list(APIView):
+#     def get(self, request, pk, format=None):
+#         reaction = QuestionReaction.objects.filter(question_id=pk).all()
+#         serializer = QuestionReactionSerializer(reaction,
+#                                                 context={'request': request},
+#                                                 many=True)
+#         return Response(serializer.data)
 
 
-class QuestionReaction_detail(APIView):
-    def get_object(self, pk):
-        try:
-            return QuestionReaction.objects.filter(pk=pk).first()
-        except QuestionReaction.DoesNotExist:
-            return Http404
+# class QuestionReaction_detail(APIView):
+#     def get_object(self, pk):
+#         try:
+#             return QuestionReaction.objects.filter(pk=pk).first()
+#         except QuestionReaction.DoesNotExist:
+#             return Http404
 
-    def get(self, request, pk, format=None):
-        reaction = self.get_object(pk)
-        serializer = QuestionReactionSerializer(reaction,
-                                                context={'request': request})
-        return Response(serializer.data)
+#     def get(self, request, pk, format=None):
+#         reaction = self.get_object(pk)
+#         serializer = QuestionReactionSerializer(reaction,
+#                                                 context={'request': request})
+#         return Response(serializer.data)
 
 
 class Tags_list(APIView):
     def get(self, request, format=None):
         tags = Tag.objects.all()
-        serializer = TagSerializer(tags, many=True)
+        serializer = TagSerializer(tags, many=True, context={'request': request})
         return Response(serializer.data)
 
 
 class Tags_detail(APIView):
-    def get_object(self, pk):
+    def get_object(self, name):
         try:
-            return Tag.objects.get(pk=pk)
+            return Tag.objects.get(name=name)
         except Tag.DoesNotExist:
             return Http404
 
-    def get(self, request, pk, format=None):
-        tags = Tag.objects.get(pk=pk)
-        serializer = TagSerializer(tags)
+    def get(self, request, name, format=None):
+        tags = self.get_object(name)
+        serializer = TagSerializer(tags, context={'request': request})
         return Response(serializer.data)
 
-
-class QuestionTag_list(APIView):
-    def get(self, request, pk, format=None):
-        question_tag = QuestionTag.objects.filter(question_id=pk).all()
-        serializer = QuestionTagSerializer(question_tag, context={'request': request},  many=True)
-        return Response(serializer.data)
-
-
-class QuestionTag_detail(APIView):
-    def get_object(self, pk):
-        try:
-            return QuestionTag.objects.get(pk=pk)
-        except QuestionTag.DoesNotExist:
-            return Http404
-
-    def get(self, request, pk, format=None):
-        question_tag = self.get_object(pk)
-        serializer = QuestionTagSerializer(question_tag)
-        return Response(serializer.data)
 
 class Tags_questions(APIView):
-   def get(self, request, pk, format=None):
-       qid = QuestionTag.objects.values_list('question_id', flat=True).filter(tag_id=pk).all()
-       questions = Question.objects.filter(id__in=qid).all()
-    #    print("auhot_tag=",qid,questions)
-       serializer = QuestionSerializer(questions, context={'request': request},
+    def get(self, request, name, format=None):
+        questions_tag = QuestionTag.objects.filter(tag__name=name).all()
+        serializer = QuestionTagSerializer(questions_tag, context={'request': request},
                                many=True)
-       return Response(serializer.data)
+        return Response(serializer.data)
+
 
 class Answer_list(APIView):
     def get(self, request, pk, format=None):
@@ -144,10 +131,8 @@ class Answer_detail(APIView):
             return Http404
 
     def get(self, request, pk, qid, format=None):
-
-        print("get", pk)
         answer = self.get_object(pk, qid)
-        serializer = AnswerSerializer(answer, context={'request': request},)
+        serializer = AnswerSerializer(answer, context={'request': request})
         return Response(serializer.data)
 
 

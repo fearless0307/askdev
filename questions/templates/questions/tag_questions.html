@@ -7,9 +7,9 @@
     </div>
     <div class="col-12 col-sm-12 col-md-12 col-lg-10 col-xl-10 view-type">
       <span>VIEW</span>
-      <span><a href="{% url 'stories-home' %}?view=card"><i class="fas fa-th-large"></i></a></span>
-      <span><a href="{% url 'stories-home' %}?view=detail"><i class="fas fa-bars"></i></a></span>
-      <span><a href="{% url 'stories-home' %}?view=list"><i class="fas fa-align-justify"></i></a></span>
+      <span><a href="/tags/{{ title }}/questions/?view=card"><i class="fas fa-th-large"></i></a></span>
+      <span><a href="/tags/{{ title }}/questions/?view=detail"><i class="fas fa-bars"></i></a></span>
+      <span><a href="/tags/{{ title }}/questions/?view=list"><i class="fas fa-align-justify"></i></a></span>
       <span class="border h-100"></span>
       <span>SORT</span>
       <span>
@@ -31,65 +31,76 @@
 <!-- \ View -->
 {% endblock views %}
 {% block content %}
-<div class="card bg-white mb-4">
+<div class="card bg-white text-center mb-4">
   <div class="card-body">
-    <h2>Join the discussion</h2>
-    <h4>Comment and be a part of what the internet is talking about!</h4>
-    <button class="btn btn-primary">Join Now!</button>
+    <h1>{{ title }}</h1>
   </div>
 </div>
-
 {% endblock content %}
 {% block scripts %}
 <script>
-  let stories_url = '{{ stories_url }}';
+  let tag_questions_url = '{{ tag_questions_url }}';
   let view_type = '{{ view_type }}';
   $.ajax({
-    url: stories_url,
-    success: display_stories
+    url: tag_questions_url,
+    success: display_questions
   });
 
-  function display_stories(stories) {
-    console.log("Showing stories");
-    console.log(stories);
-    let stories_html = '';
-    stories.forEach(story => {
+  function display_questions(question_urls) {
+    console.log("Showing questions");
+    console.log(question_urls);
+    let questions = [];
+
+    question_urls.forEach(question => {
+      $.ajax({
+        url: question.question,
+        success: function (result) {
+          questions.push(result);
+        },
+        async: false
+      });
+    });
+
+    console.log(questions);
+    let questions_html = '';
+    questions.forEach(question => {
       let username = '';
       let profile_pic_url = '';
-      console.log(story);
+      console.log(question);
       $.ajax({
-        url: story.author,
+        url: question.author,
         success: function (result) {
           username = result.username;
           profile_pic_url = result.profile_image;
         },
         async: false
       });
-      let modified_at_moment = moment(Date.parse(story.modified_at)).toNow(true) + " ago";
+      let modified_at_moment = moment(Date.parse(question.modified_at)).toNow(true) + " ago";
       console.log(modified_at_moment);
-      story_url = "{% url 'stories-home' %}" + story.id + "/";
-      console.log(story_url);
+      question_url = "{% url 'stories-home' %}" + question.id + "/";
+      console.log(question_url);
       image_url = "{% static 'questions/img/community-back.png' %}";
-      tags = story.tags.map(x => '<a class="badge badge-pill badge-info" href="/tags/' + x.tag_name + '/stories/">' + x.tag_name + '</a>').join(" ");
+      tags = question.tags.map(x => '<a class="badge badge-pill badge-info" href="/tags/' + x.tag_name +
+        '/questions/">' + x.tag_name + '</a>').join(" ");
       let reactions = new Set();
       let reaction_score = 0;
-      story.reactions.forEach(element => {
+      question.reactions.forEach(element => {
         reactions.add(element.reaction_name);
         reaction_score += element.reaction_score;
       });
       console.log(reactions);
       console.log(reaction_score);
-      let story_html = "";
+      let question_html = "";
 
       var div = document.createElement('div');
-      div.innerHTML = story.story;
+      div.innerHTML = question.description;
       var allImage = div.getElementsByTagName('img');
       var firstImage = '';
       console.log(allImage);
       for (var i = 0; i < allImage.length; i++) {
-        if (allImage[i].src.indexOf("/media/uploads/") >= 0){
-            firstImage = allImage[i].src;
-            break;
+        if (allImage[i].src.indexOf("/media/uploads/") >= 0) {
+          firstImage = allImage[i].src;
+          break;
         }
       }
       // var imgSrc = firstImage ? firstImage.src : "";
@@ -98,30 +109,33 @@
       // var rawImgSrc = firstImage ? firstImage.getAttribute("src") : "";
       // console.log(rawImgSrc);
 
-      var story_story = div.innerHTML.replace(/<img alt="" src="\/m[^>]*>/g,"");
+      var question_description = div.innerHTML.replace(/<img alt="" src="\/m[^>]*>/g, "");
+      if (question_description == "NULL") {
+        question_description = "";
+      }
 
 
       switch (view_type) {
         case "list":
-          story_html = '<div class="card bg-white mb-4 p-4"><div class="row">' +
+          question_html = '<div class="card bg-white mb-4 p-4"><div class="row">' +
             '<div class="col-2 col-md-1 p-0">' +
             '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle"></div>' +
-            '<div class="col-10 col-md-11 story-body">' +
-            '<h2><a href="' + story_url + '">' + story.title + '</a></h2>' +
+            '<div class="col-10 col-md-11 question-body">' +
+            '<h2><a href="' + question_url + '">' + question.question + '</a></h2>' +
             '<h4><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
             '<h6>' + tags + '</h6></div></div>' +
             '<div class="row mt-4"><div class="col-8">' +
-            '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F '+reaction_score+'</button></div>' +
+            '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' + reaction_score + '</button></div>' +
             '<div class="col-4 text-right">' +
             '<span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
             '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
           break;
         case "detail":
-          story_html = '<div class="card bg-white mb-4 p-4">' +
+          question_html = '<div class="card bg-white mb-4 p-4">' +
             '<div class="row"><div class="col-2 col-md-1 p-0">' +
             '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle"></div>' +
-            '<div class="col-6 col-md-8 story-body">' +
-            '<h2><a href="' + story_url + '">' + story.title + '</a></h2>' +
+            '<div class="col-6 col-md-8 question-body">' +
+            '<h2><a href="' + question_url + '">' + question.question + '</a></h2>' +
             '<h4><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
             '<h6>' + tags + '</h6></div>' +
             '<div class="col-4 col-md-3"><img class="img-fluid rounded" src="' + firstImage + '"></div></div>' +
@@ -131,14 +145,14 @@
             '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
           break;
         default:
-          story_html = '<div class="card bg-white mb-4 p-4">' +
+          question_html = '<div class="card bg-white mb-4 p-4">' +
             '<div class="row"><div class="col-2 col-md-1 p-0">' +
             '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle"></div>' +
-            '<div class="col-10 col-md-11 story-body">' +
-            '<h2><a href="' + story_url + '">' + story.title + '</a></h2>' +
+            '<div class="col-10 col-md-11 question-body">' +
+            '<h2><a href="' + question_url + '">' + question.question + '</a></h2>' +
             '<h4><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
             '<h6>' + tags + '</h6>' +
-            '' + story_story + '' +
+            '' + question_description + '' +
             '<img class="img-fluid rounded" src="' + firstImage + '"></div></div>' +
             '<div class="row mt-4"><div class="col-8">' +
             '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' + reaction_score + '</button></div>' +
@@ -146,10 +160,9 @@
             '<span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
             '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
       }
-      // console.log( $('.story-body img').attr('src') );
-      stories_html = stories_html + story_html;
+      questions_html = questions_html + question_html;
     });
-    $("#main-body").html($("#main-body").html() + stories_html);
+    $("#main-body").html($("#main-body").html() + questions_html);
   }
 </script>
 

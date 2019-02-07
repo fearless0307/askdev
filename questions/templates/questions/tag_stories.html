@@ -7,9 +7,9 @@
     </div>
     <div class="col-12 col-sm-12 col-md-12 col-lg-10 col-xl-10 view-type">
       <span>VIEW</span>
-      <span><a href="{% url 'stories-home' %}?view=card"><i class="fas fa-th-large"></i></a></span>
-      <span><a href="{% url 'stories-home' %}?view=detail"><i class="fas fa-bars"></i></a></span>
-      <span><a href="{% url 'stories-home' %}?view=list"><i class="fas fa-align-justify"></i></a></span>
+      <span><a href="/tags/{{ title }}/stories/?view=card"><i class="fas fa-th-large"></i></a></span>
+      <span><a href="/tags/{{ title }}/stories/?view=detail"><i class="fas fa-bars"></i></a></span>
+      <span><a href="/tags/{{ title }}/stories/?view=list"><i class="fas fa-align-justify"></i></a></span>
       <span class="border h-100"></span>
       <span>SORT</span>
       <span>
@@ -31,26 +31,36 @@
 <!-- \ View -->
 {% endblock views %}
 {% block content %}
-<div class="card bg-white mb-4">
+<div class="card bg-white text-center mb-4">
   <div class="card-body">
-    <h2>Join the discussion</h2>
-    <h4>Comment and be a part of what the internet is talking about!</h4>
-    <button class="btn btn-primary">Join Now!</button>
+    <h1>{{ title }}</h1>
   </div>
 </div>
-
 {% endblock content %}
 {% block scripts %}
 <script>
-  let stories_url = '{{ stories_url }}';
+  let tag_stories_url = '{{ tag_stories_url }}';
   let view_type = '{{ view_type }}';
   $.ajax({
-    url: stories_url,
-    success: display_stories
+    url: tag_stories_url,
+    success: display_questions
   });
 
-  function display_stories(stories) {
-    console.log("Showing stories");
+  function display_questions(story_urls) {
+    console.log("Showing storys");
+    console.log(story_urls);
+    let stories = [];
+
+    story_urls.forEach(story => {
+      $.ajax({
+        url: story.story,
+        success: function (result) {
+          stories.push(result);
+        },
+        async: false
+      });
+    });
+
     console.log(stories);
     let stories_html = '';
     stories.forEach(story => {
@@ -70,7 +80,8 @@
       story_url = "{% url 'stories-home' %}" + story.id + "/";
       console.log(story_url);
       image_url = "{% static 'questions/img/community-back.png' %}";
-      tags = story.tags.map(x => '<a class="badge badge-pill badge-info" href="/tags/' + x.tag_name + '/stories/">' + x.tag_name + '</a>').join(" ");
+      tags = story.tags.map(x => '<a class="badge badge-pill badge-info" href="/tags/' + x.tag_name + '/stories/">' +
+        x.tag_name + '</a>').join(" ");
       let reactions = new Set();
       let reaction_score = 0;
       story.reactions.forEach(element => {
@@ -87,9 +98,9 @@
       var firstImage = '';
       console.log(allImage);
       for (var i = 0; i < allImage.length; i++) {
-        if (allImage[i].src.indexOf("/media/uploads/") >= 0){
-            firstImage = allImage[i].src;
-            break;
+        if (allImage[i].src.indexOf("/media/uploads/") >= 0) {
+          firstImage = allImage[i].src;
+          break;
         }
       }
       // var imgSrc = firstImage ? firstImage.src : "";
@@ -98,7 +109,7 @@
       // var rawImgSrc = firstImage ? firstImage.getAttribute("src") : "";
       // console.log(rawImgSrc);
 
-      var story_story = div.innerHTML.replace(/<img alt="" src="\/m[^>]*>/g,"");
+      var story_story = div.innerHTML.replace(/<img alt="" src="\/m[^>]*>/g, "");
 
 
       switch (view_type) {
@@ -111,7 +122,7 @@
             '<h4><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
             '<h6>' + tags + '</h6></div></div>' +
             '<div class="row mt-4"><div class="col-8">' +
-            '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F '+reaction_score+'</button></div>' +
+            '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' + reaction_score + '</button></div>' +
             '<div class="col-4 text-right">' +
             '<span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
             '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';

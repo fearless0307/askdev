@@ -3,34 +3,41 @@ from questions.models import Tag, QuestionTag, Answer
 import wikipedia
 import requests
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+from django.http import JsonResponse
 
 
 def tag_home(request):
+    tags_url = request.build_absolute_uri(reverse('tag'))
     context = {
-        'tags': Tag.objects.all()
+        'title': 'Tags',
+        'tags_url': tags_url
     }
     return render(request, 'questions/tag.html', context)
 
-def tag_detail(request, pk):
-    tag= Tag.objects.filter(name=pk).first()
 
-    # response = requests.get('http://127.0.0.1:8000/api/questions/'+ str(pk)+'/')
-    # api_data = response.json()
-    # print(api_data)
-
+def tag_question(request, name):
+    view_type = request.GET.get('view', 'card')
+    tag_questions = request.build_absolute_uri(reverse('tag-question-detail', kwargs={'name': name}))
+    print(tag_questions)
     context = {
-        'questions': QuestionTag.objects.filter(tag=tag.id),
-        'tag': tag.name,
-        # 'detail': wikipedia.summary(tag.name + 'Programming', sentences=3)
+        'title': name,
+        'tag_questions_url': tag_questions,
+        'view_type': view_type,
     }
-    return render(request, 'questions/tag_detail.html', context)
+    return render(request, 'questions/tag_questions.html', context )
 
-def tag_answer(request, pk):
-    answers = Answer.objects.filter(question=pk)
-    print(answers)
-    context = { 'answers': answers } 
-    return render(request, 'questions/tag_answer.html', context )
 
+def tag_story(request, name):
+    view_type = request.GET.get('view', 'card')
+    tag_storys = request.build_absolute_uri(reverse('tag-story-detail', kwargs={'name': name}))
+    print(tag_storys)
+    context = {
+        'title': name,
+        'tag_stories_url': tag_storys,
+        'view_type': view_type,
+    }
+    return render(request, 'questions/tag_stories.html', context )
 
 def testing(request):
      return render(request, 'questions/testing.html')
