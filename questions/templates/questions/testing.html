@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Fetch API Sandbox</title>
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+   -->
+</head>
+<body>
+<button class="btn btn-warning mr-4" id="getPosts">Get API DATA</button>
+<div id="output"></div>
+
+<script type="text/javascript">
+// document.getElementById('getPosts').addEventListener('click', getPosts);
+	function getPosts(){
+      fetch('http://127.0.0.1:8000/api/questions/2/answers/')
+      .then((res) => res.json())
+      .then((data) => {
+        let output = '<h2 class="mb-4">Posts</h2>';
+
+        console.log(data)
+        data.forEach(function(post){
+          output += `
+            <div class="card card-body mb-3">
+              <h3>${post.author_name}</h3>
+              <p>${post.answer}</p>
+            </div>
+          `;
+        });
+        document.getElementById('output').innerHTML = output;
+      })
+    }
+getPosts()
+</script>
