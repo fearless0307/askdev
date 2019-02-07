@@ -53,12 +53,33 @@
       console.log(reactions);
       console.log(reaction_score);
       let story_html = "";
+
+      var div = document.createElement('div');
+      div.innerHTML = story.story;
+      var allImage = div.getElementsByTagName('img');
+      var firstImage = '';
+      console.log(allImage);
+      for (var i = 0; i < allImage.length; i++) {
+        if (allImage[i].src.indexOf("/media/uploads/") >= 0){
+            firstImage = allImage[i].src;
+            break;
+        }
+      }
+      // var imgSrc = firstImage ? firstImage.src : "";
+      console.log(firstImage);
+      // or, if you want the unresolved src, as it appears in the original HTML:
+      // var rawImgSrc = firstImage ? firstImage.getAttribute("src") : "";
+      // console.log(rawImgSrc);
+
+      var story_story = div.innerHTML.replace(/<img alt="" src="\/m[^>]*>/g,"");
+
+
       switch (view_type) {
         case "list":
           story_html = '<div class="card bg-white mb-4 p-4"><div class="row">' +
             '<div class="col-2 col-md-1 p-0">' +
             '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle"></div>' +
-            '<div class="col-10 col-md-11">' +
+            '<div class="col-10 col-md-11 story-body">' +
             '<h2><a href="' + story_url + '">' + story.title + '</a></h2>' +
             '<h4><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
             '<h6>' + tags + '</h6></div></div>' +
@@ -72,11 +93,11 @@
           story_html = '<div class="card bg-white mb-4 p-4">' +
             '<div class="row"><div class="col-2 col-md-1 p-0">' +
             '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle"></div>' +
-            '<div class="col-6 col-md-8">' +
+            '<div class="col-6 col-md-8 story-body">' +
             '<h2><a href="' + story_url + '">' + story.title + '</a></h2>' +
             '<h4><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
             '<h6>' + tags + '</h6></div>' +
-            '<div class="col-4 col-md-3"><img class="img-fluid rounded" src="' + image_url + '"></div></div>' +
+            '<div class="col-4 col-md-3"><img class="img-fluid rounded" src="' + firstImage + '"></div></div>' +
             '<div class="row mt-4"><div class="col-8"><button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' +
             reaction_score + '</button></div>' +
             '<div class="col-4 text-right"><span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
@@ -86,18 +107,19 @@
           story_html = '<div class="card bg-white mb-4 p-4">' +
             '<div class="row"><div class="col-2 col-md-1 p-0">' +
             '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle"></div>' +
-            '<div class="col-10 col-md-11">' +
+            '<div class="col-10 col-md-11 story-body">' +
             '<h2><a href="' + story_url + '">' + story.title + '</a></h2>' +
             '<h4><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
             '<h6>' + tags + '</h6>' +
-            '<p>' + story.story + '</p>' +
-            '<img class="img-fluid rounded" src="' + image_url + '"></div></div>' +
+            '' + story_story + '' +
+            '<img class="img-fluid rounded" src="' + firstImage + '"></div></div>' +
             '<div class="row mt-4"><div class="col-8">' +
             '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' + reaction_score + '</button></div>' +
             '<div class="col-4 text-right">' +
             '<span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
             '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
       }
+      // console.log( $('.story-body img').attr('src') );
       stories_html = stories_html + story_html;
     });
     $("#main-body").html($("#main-body").html() + stories_html);

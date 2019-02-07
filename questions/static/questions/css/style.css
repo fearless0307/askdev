@@ -24,3 +24,9 @@ body{
     margin-left: 5px;
     margin-right: 5px;
 }
+
+.story-body > img {
+    max-width: 100%;
+    height: auto;
+    border-radius: .25rem!important;
+}
