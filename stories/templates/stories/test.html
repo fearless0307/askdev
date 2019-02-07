@@ -2,12 +2,15 @@
 {% block content %}
 <p>The story is given score of -- {{ liked }}</p>
 <br>
-<p>The story liked by -- {{ user }}</p>
+<p>The story liked by current user -- {{ current_user }} with id of {{ current_user.id }} </p>
 <br>
 {% for s in story %}
-<p>the story title is -- {{ s.title }}</p>
-<p>the story author is -- {{ s.author }}</p>
-<p>the story is -- {{ s.story | safe }}</p>
-<p>The story is is -- {{ s.id }}</p>
+<!-- <p>the story id is -- {{ s.id }}</p>
+<p>the story author id is -- {{ s.author.id }}</p> -->
+<p>current story id is {{ s.id }}</p>
+{% endfor %}
+{% for r in reaction %}
+<p>Reaction is {{ r.reaction.name }}</p>
+<p>Reaction score is {{ r.reaction.score }}</p>
 {% endfor %}
 {% endblock %}

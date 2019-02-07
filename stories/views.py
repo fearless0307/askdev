@@ -83,11 +83,12 @@ def submit_like_reaction(request, pk):
     # liked = 1
     current_user = request.user
     story = Story.objects.filter(id=pk)
-    # story_reaction = StoryReaction.objects.filter(author=current_user.id)
+    story_reaction = StoryReaction.objects.filter(story=pk)
     context = {
         'liked': 1,
-        'user': current_user,
-        'story': story
+        'current_user': current_user,
+        'story': story,
+        'reaction': story_reaction
     }
     return render(request, 'stories/test.html', context)
 
