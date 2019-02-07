@@ -1,18 +1,19 @@
 from django.shortcuts import render
+from django.http import Http404, HttpResponse
+from django.urls import reverse
+
+from rest_framework import request, status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+from stories.models import StoryTag
+from stories.serializers import StoryTagSerializer
 from questions.models import Question, Reply, QuestionReaction, Tag,\
     QuestionTag, Answer, Reaction
 from questions.serializers import QuestionSerializer, AnswerSerializer,\
     ReplySerializer, QuestionReactionSerializer, TagSerializer,\
     ReactionSerializer,  QuestionTagSerializer, TagDataSerializer
-
-from stories.serializers import StoryTagSerializer
-from django.http import Http404, HttpResponse
-from rest_framework.decorators import api_view
-from rest_framework import request, status
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from stories.models import StoryTag
-from django.urls import reverse
 
 
 def all_api(request):
@@ -89,7 +90,8 @@ class Reply_detail(APIView):
 class Tags_list(APIView):
     def get(self, request, format=None):
         tags = Tag.objects.all()
-        serializer = TagSerializer(tags, many=True, context={'request': request})
+        serializer = TagSerializer(
+            tags, many=True, context={'request': request})
         return Response(serializer.data)
 
 
@@ -116,8 +118,9 @@ class Tags_detail(APIView):
 class Tags_questions(APIView):
     def get(self, request, name, format=None):
         questions_tag = QuestionTag.objects.filter(tag__name=name).all()
-        serializer = QuestionTagSerializer(questions_tag, context={'request': request},
-                               many=True)
+        serializer = QuestionTagSerializer(questions_tag,
+                                           context={'request': request},
+                                           many=True)
         return Response(serializer.data)
 
 

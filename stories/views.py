@@ -24,7 +24,8 @@ def stories_home(request):
 
 
 def stories_detail(request, pk):
-    story_url = request.build_absolute_uri(reverse('story-detail', kwargs={'pk': pk}))
+    story_url = request.build_absolute_uri(
+        reverse('story-detail', kwargs={'pk': pk}))
     story = Story.objects.get(id=pk)
     context = {
         'title': 'Story',
@@ -51,10 +52,12 @@ def stories_create(request):
             # story_post.created_at = timezone.now()
             # storytag_post.story_id = story_post.id
             # storytag_post.save()
-            messages.success(request, f'Your story has been added!', extra_tags='success')
+            messages.success(
+                request, f'Your story has been added!', extra_tags='success')
             return redirect('stories-home')
         else:
-            messages.error(request, f'Something went wrong!', extra_tags='danger')
+            messages.error(request, f'Something went wrong!',
+                           extra_tags='danger')
     else:
         story_form = StoryForm()
         # storytag_form = StoryTagForm()
@@ -78,7 +81,8 @@ def stories_edit(request, pk):
             return redirect('stories-detail', pk=story_post.pk)
     else:
         story_form = StoryForm(instance=story)
-    return render(request, 'stories/story_edit.html', {'story_form':story_form})
+    return render(request, 'stories/story_edit.html',
+                  {'story_form': story_form})
 
 
 @login_required
@@ -97,9 +101,11 @@ def submit_reaction(request, pk, reaction):
     if len(story_reactions) > 0:
         for user_react in story_reactions:
             if story.author == current_user:
-                user_message = 'It seems like you ' + reaction + ' your own post!!'
+                user_message = 'It seems like you ' + reaction +\
+                               ' your own post!!'
             else:
                 user_message = 'Hey!! you ' + reaction + ' this post!'
     else:
-        user_message = 'Hmmm.....you are the first one to ' + reaction + ' this post!!'
+        user_message = 'Hmmm.....you are the first one to ' + reaction +\
+                       ' this post!!'
     return HttpResponse(user_message)

@@ -11,7 +11,7 @@
       <span><a href="/tags/{{ title }}/stories/?view=detail"><i class="fas fa-bars"></i></a></span>
       <span><a href="/tags/{{ title }}/stories/?view=list"><i class="fas fa-align-justify"></i></a></span>
       <span class="border h-100"></span>
-      <span>SORT</span>
+      <!-- <span>SORT</span>
       <span>
         <div class="btn-group">
           <button type="button" class="btn">&#x1F525 Hot</button>
@@ -24,12 +24,13 @@
             <a class="dropdown-item" href="#">New</a>
           </div>
         </div>
-      </span>
+      </span> -->
     </div>
   </div>
 </div>
 <!-- \ View -->
 {% endblock views %}
+
 {% block content %}
 <div class="card bg-white text-center mb-4">
   <div class="card-body">
@@ -37,6 +38,7 @@
   </div>
 </div>
 {% endblock content %}
+
 {% block scripts %}
 <script>
   let tag_stories_url = '{{ tag_stories_url }}';
@@ -103,14 +105,9 @@
           break;
         }
       }
-      // var imgSrc = firstImage ? firstImage.src : "";
       console.log(firstImage);
-      // or, if you want the unresolved src, as it appears in the original HTML:
-      // var rawImgSrc = firstImage ? firstImage.getAttribute("src") : "";
-      // console.log(rawImgSrc);
 
       var story_story = div.innerHTML.replace(/<img alt="" src="\/m[^>]*>/g, "");
-
 
       switch (view_type) {
         case "list":
@@ -157,11 +154,9 @@
             '<span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
             '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
       }
-      // console.log( $('.story-body img').attr('src') );
       stories_html = stories_html + story_html;
     });
     $("#main-body").html($("#main-body").html() + stories_html);
   }
 </script>
-
 {% endblock scripts %}

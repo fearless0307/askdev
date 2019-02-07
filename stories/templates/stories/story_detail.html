@@ -1,7 +1,7 @@
 {% extends 'questions/base.html' %}
 {% load static %}
+
 {% block content %}
-{% load static %}
 <div class="card bg-white mb-4 p-4">
   <div class="col-10 col-md-11">
     <a href="#" class="mr-2">{{ story.author }}</a>
@@ -23,7 +23,8 @@
 <a href="{% url 'stories-edit' pk=story.pk%}" class="btn btn-default">Edit Story</a>
 <a href="{% url 'stories-delete' pk=story.pk %}" class="btn btn-default">Delete</a>
 </div>
-{% endblock %}
+{% endblock content %}
+
 {% block scripts %}
 <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
   crossorigin="anonymous"></script>
@@ -68,7 +69,7 @@
       '<h1 class="text-center">' + story.title + '</h1>' +
       '<a href="#" class="mr-2"></a>' +
       '<h4 class="text-center"><a href="#"><img src="' + profile_pic_url +
-      '" class="img-fluid rounded-circle" style="width: 40px;">' + ' '+ username + '</a></h4>' +
+      '" class="img-fluid rounded-circle" style="width: 40px;">' + ' ' + username + '</a></h4>' +
       '<h6 class="text-center">Published ' + modified_at_moment + '</h6>' +
       '<h6 class="text-center">' + tags + '</h6>' +
       '' + story.story + '' +

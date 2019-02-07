@@ -1,29 +1,27 @@
 {% extends "questions/base.html" %}
 {% load static %}
 {% block content %}
-
-
 <script type="text/javascript">
   // document.getElementById('getPosts').addEventListener('click', getPosts);
-    function getPosts(questionID, parentElID){
-        fetch(`http://127.0.0.1:8000/api/questions/${questionID}/answers/`)
-        .then((res) => res.json())
-        .then((data) => {
-          let output = '';
-          console.log(data)
-          data.forEach(function(post){
-            output += `
+  function getPosts(questionID, parentElID) {
+    fetch(`http://127.0.0.1:8000/api/questions/${questionID}/answers/`)
+      .then((res) => res.json())
+      .then((data) => {
+        let output = '';
+        console.log(data)
+        data.forEach(function (post) {
+          output +=
+            `
               <div class="card card-body mb-3">
                 <h4>${post.answer}</h4>
 
               </div>
             `;
-          });
-          document.getElementById(parentElID).innerHTML = output;
-        })
-      }
+        });
+        document.getElementById(parentElID).innerHTML = output;
+      })
+  }
 </script>
-   
 
 <div class="card bg-white mb-4">
   <div class="card-body">
@@ -34,38 +32,35 @@
 
 {% for question in questions %}
 
-  <div class="card bg-white mb-4 p-4">
-    <div class="row">
-      <div class="col-2 col-md-1 p-0">
-        <img src="{% static 'questions/img/favicon.ico' %}" class="img-fluid rounded-circle">
-      </div>
-      <div class="col-10 col-md-11">
-        <h2><a href="{% url 'tag-answer' question.question.id %}">{{ question.question.question }}</a></h2>
-        <h4>{{ question.question.modified_at|date:"F d, Y" }}</h4>
-        <h6><a href="#">#tag1</a> <a href="#">#tag2</a></h6>
-        <a class="mr-2" href="#"> By {{ question.question.author }}</a>
-      </div>
+<div class="card bg-white mb-4 p-4">
+  <div class="row">
+    <div class="col-2 col-md-1 p-0">
+      <img src="{% static 'questions/img/favicon.ico' %}" class="img-fluid rounded-circle">
     </div>
-    <div class="row mt-4">
-      <div class="col-8">
-        <button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F 3</button>
-        <button class="btn rounded">&#x1F4AC 3</button>
-      </div>
-      <div class="col-4 text-right">
-        <span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>
-        <span><a href="#"><i class="fas fa-share-alt"></i></a></span>
-      </div>
+    <div class="col-10 col-md-11">
+      <h2><a href="{% url 'tag-answer' question.question.id %}">{{ question.question.question }}</a></h2>
+      <h4>{{ question.question.modified_at|date:"F d, Y" }}</h4>
+      <h6><a href="#">#tag1</a> <a href="#">#tag2</a></h6>
+      <a class="mr-2" href="#"> By {{ question.question.author }}</a>
     </div>
-    
   </div>
+  <div class="row mt-4">
+    <div class="col-8">
+      <button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F 3</button>
+      <button class="btn rounded">&#x1F4AC 3</button>
+    </div>
+    <div class="col-4 text-right">
+      <span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>
+      <span><a href="#"><i class="fas fa-share-alt"></i></a></span>
+    </div>
+  </div>
+</div>
 
+<!-- <button class="btn btn-warning mr-4" id="getPosts">Get API DATA</button> -->
+<div id="answers-{{ question.question.id }}"></div>
 
-  <!-- <button class="btn btn-warning mr-4" id="getPosts">Get API DATA</button> -->
-  <div id="answers-{{ question.question.id }}"></div>
-  
-  <script>
+<script>
   getPosts('{{ question.question.id }}', "answers-{{ question.question.id }}")
 </script>
-  {% endfor %}
+{% endfor %}
 {% endblock content %}
-

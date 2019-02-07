@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
+
 class ParameterisedHyperlinkedIdentityField\
-      (serializers.HyperlinkedIdentityField):
+        (serializers.HyperlinkedIdentityField):
 
     lookup_fields = (('pk', 'pk'),)
 

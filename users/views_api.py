@@ -1,16 +1,17 @@
-from rest_framework.decorators import api_view
+from django.http import Http404
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+
 from rest_framework import request, status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+from questions.models import Question
+from questions.serializers import QuestionSerializer
 from users.models import Profile, FavouriteQuestion
 from users.serializers import UserSerializer, FavouriteQuestionSerializer,\
     ProfileSerializer
-from django.http import Http404
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from django.contrib.auth.models import User
-from questions.models import Question
-from questions.serializers import QuestionSerializer
-
-from django.contrib.auth.decorators import login_required
 
 
 class User_class(APIView):
@@ -49,43 +50,6 @@ class User_Detail_class(APIView):
         else:
             return Response(user_serializer.data)
 
-    # def put(self, request, pk, format=None):
-    #     user1 = self.get_object(pk)
-    #     profile = Profile.objects.get(id=pk)
-    #     print("data=",request.data,profile.user,user1.id,pk)
-    #     user = request.data
-    #     user_data = {
-    #         'username':user['username'],
-    #         'email': user['email'],
-    #     }
-    #     user_profile = {
-    #         'user':pk,
-    #         'profession':user['profession'],
-    #         'phone': user['phone'],
-    #         'profile_image': user['profile_image'],
-    #         'cover_image': user['cover_image'],
-    #     }
-    #     print("profile",user1)
-    #     user_serializer =\
-    #       UserSerializer(user1, data=user_data,context={'request': request})
-    #     user_profile_serializer =\
-    #       ProfileSerializer(profile,
-    #                         data=user_profile,context={'request': request})
-    #     print("cond=",user_serializer.is_valid() ,
-    #           user_profile_serializer.is_valid())
-    #     if user_serializer.is_valid() and user_profile_serializer.is_valid():
-    #         user_serializer.save()
-    #         user_profile_serializer.save()
-    #         return Response({**user_serializer.data,
-    #                         **user_profile_serializer.data})
-    #     return Response(user_serializer.errors,
-    #                     status=status.HTTP_400_BAD_REQUEST)
-
-    # def delete(self, request, pk, format=None):
-    #     user = self.get_object(pk)
-    #     user.delete()
-    #     return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 class User_Question_Detail_class(APIView):
     def get(self, request, pk, format=None):
@@ -98,9 +62,10 @@ class User_Question_Detail_class(APIView):
 
 class User_FavouriteQuestion_Detail(APIView):
     def get(self, request, pk, format=None):
-       qid = FavouriteQuestion.objects.values_list('question_id', flat=True).filter(author_id=pk).all()
-       questions = Question.objects.filter(id__in=qid).all()
-    #    print("auhot_tag=",qid,questions)
-       serializer = QuestionSerializer(questions, context={'request': request},
-                               many=True)
-       return Response(serializer.data)
+        qid = FavouriteQuestion.objects.values_list(
+            'question_id', flat=True).filter(author_id=pk).all()
+        questions = Question.objects.filter(id__in=qid).all()
+        serializer = QuestionSerializer(questions,
+                                        context={'request': request},
+                                        many=True)
+        return Response(serializer.data)

@@ -40,7 +40,7 @@ class Answer(models.Model):
 
     def __str__(self):
         return f'User {self.author.id} Question {self.question.id}'\
-                ' Answer {self.answer}'
+            ' Answer {self.answer}'
 
 
 class Reply(models.Model):
@@ -52,9 +52,7 @@ class Reply(models.Model):
 
     def __str__(self):
         return f'User {self.author.id} Answer {self.answer.id}'\
-                ' Reply {self.reply}'
-
-    
+            ' Reply {self.reply}'
 
 
 class Reaction(models.Model):
