@@ -2,6 +2,29 @@
 {% load static %}
 {% block content %}
 
+
+<script type="text/javascript">
+  // document.getElementById('getPosts').addEventListener('click', getPosts);
+    function getPosts(questionID, parentElID){
+        fetch(`http://127.0.0.1:8000/api/questions/${questionID}/answers/`)
+        .then((res) => res.json())
+        .then((data) => {
+          let output = '';
+          console.log(data)
+          data.forEach(function(post){
+            output += `
+              <div class="card card-body mb-3">
+                <h4>${post.answer}</h4>
+
+              </div>
+            `;
+          });
+          document.getElementById(parentElID).innerHTML = output;
+        })
+      }
+</script>
+   
+
 <div class="card bg-white mb-4">
   <div class="card-body">
     <h1 style="text-align:center;"><a class="article-title"> {{ tag }}</a></h1>
@@ -10,17 +33,6 @@
 </div>
 
 {% for question in questions %}
-<!-- {{ question.question.id }} -->
-
-  <!-- <div class="card bg-white mb-4">
-    <div class="card-body">       
-        <h2><a class="article-title"> {{ question.tag }}</a></h2>
-        <a class="mr-2" href="#">{{ question.question.author }}</a>
-        <small class="text-muted">{{ question.question.modified_at|date:"F d, Y" }}</small>
-        <h4><a class="article-title" href="{% url 'tag-answer' question.question.id %}"> {{ question.question.question }}</a></h4>
-    
-      </div>
-  </div> -->
 
   <div class="card bg-white mb-4 p-4">
     <div class="row">
@@ -44,8 +56,16 @@
         <span><a href="#"><i class="fas fa-share-alt"></i></a></span>
       </div>
     </div>
+    
   </div>
 
+
+  <!-- <button class="btn btn-warning mr-4" id="getPosts">Get API DATA</button> -->
+  <div id="answers-{{ question.question.id }}"></div>
+  
+  <script>
+  getPosts('{{ question.question.id }}', "answers-{{ question.question.id }}")
+</script>
   {% endfor %}
 {% endblock content %}
 
