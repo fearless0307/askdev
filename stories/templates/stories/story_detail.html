@@ -1,13 +1,83 @@
 {% extends 'questions/base.html' %}
 {% block content %}
-<div class="card bg-white mb-4 p-4">
-    <div class="col-10 col-md-11">
-        <a href="#" class="mr-2">{{ story.author }}</a>
-        <h2><a class="article-title" href="#">{{ story.title }}</a></h2>
-        <h6><a href="#">#{{tags.tag.name}}</a> <a href="#">#tag2</a></h6>
-        <p>{{ story.story | safe }}</p>
-        {#<a href="{% url 'stories-edit' pk=story.pk%}" class="btn btn-default">Edit Story</a>#}
-        {#<a href="{% url 'stories-delete' pk=story.pk %}" class="btn btn-default">Delete</a>#}
+{% load static %}
+<!-- <div class="card bg-white mb-4 p-4">
+  <h1 class="text-center">Story Title</h1>
+  <a href="#" class="mr-2"></a>
+  <h4 class="text-center"><a href="#"><img src="/media/default_profile.png" class="img-fluid rounded-circle" style="width: 40px;">Username</a></h4>
+  <h6 class="text-center">Published 1 day ago</h6>
+  <h6 class="text-center"><a href="#">#tag1</a> <a href="#">#tag2</a></h6>
+  <p>vkf vfkj dvfkjvk dfvnkf vknfvn kndfvk dvkvdb vbvjd bvjdbv jdfbvjdf bv hjd fbvhjdfbhjvdb vjdb vjdvbvhj dfbvhjdfbv
+    ihdbfvhbfhjvfb</p>
+  <div class="row mt-4">
+    <div class="col-8">
+      <button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F 3</button>
     </div>
+    <div class="col-4 text-right">
+      <span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>
+      <span><a href="#"><i class="fas fa-share-alt"></i></a></span>
+    </div>
+  </div>
+</div> -->
+{#<a href="{% url 'stories-edit' pk=story.pk%}" class="btn btn-default">Edit Story</a>#}
+{#<a href="{% url 'stories-delete' pk=story.pk %}" class="btn btn-default">Delete</a>#}
 </div>
 {% endblock %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
+<script>
+  let story_url = '{{ story_url }}';
+  $.ajax({
+    url: story_url,
+    success: display_story
+  });
+
+  function display_story(story) {
+    console.log("Showing story");
+    console.log(story);
+    let story_html = '';
+    let username = '';
+    let profile_pic_url = '';
+    console.log(story);
+    $.ajax({
+      url: story.author,
+      success: function (result) {
+        username = result.username;
+        profile_pic_url = result.profile_image;
+      },
+      async: false
+    });
+    let modified_at_moment = moment(Date.parse(story.modified_at)).toNow(true) + " ago";
+    console.log(modified_at_moment);
+    story_url = "{% url 'stories-home' %}" + story.id + "/";
+    console.log(story_url);
+    image_url = "{% static 'questions/img/community-back.png' %}";
+    tags = story.tags.map(x => '<a href="/tags/' + x.tag_name + '/">#' + x.tag_name + '</a>').join(" ");
+    let reactions = new Set();
+    let reaction_score = 0;
+    story.reactions.forEach(element => {
+      reactions.add(element.reaction_name);
+      reaction_score += element.reaction_score;
+    });
+    console.log(reactions);
+    console.log(reaction_score);
+    story_html = '<div class="card bg-white mb-4 p-4">' +
+      '<h1 class="text-center">' + story.title + '</h1>' +
+      '<a href="#" class="mr-2"></a>' +
+      '<h4 class="text-center"><a href="#"><img src="' + profile_pic_url +
+      '" class="img-fluid rounded-circle" style="width: 40px;">' + username + '</a></h4>' +
+      '<h6 class="text-center">Published ' + modified_at_moment + '</h6>' +
+      '<h6 class="text-center">' + tags + '</h6>' +
+      '' + story.story + '' +
+      '<div class="row mt-4"><div class="col-8">' +
+      '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' + reaction_score + '</button></div>' +
+      '<div class="col-4 text-right">' +
+      '<span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
+      '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
+    $("#main-body").html($("#main-body").html() + story_html);
+  }
+</script>
+
+{% endblock scripts %}

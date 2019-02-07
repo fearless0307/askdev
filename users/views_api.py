@@ -40,7 +40,7 @@ class User_Detail_class(APIView):
     def get(self, request, pk, format=None):
         user = self.get_object(pk)
         user_serializer = UserSerializer(user, context={'request': request})
-        profile = Profile.objects.filter(id=pk).first()
+        profile = Profile.objects.filter(user_id=pk).first()
         if profile is not None:
             profile_serializer =\
                 ProfileSerializer(profile, context={'request': request})
