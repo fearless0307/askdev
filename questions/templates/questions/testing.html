@@ -1,23 +1,11 @@
 <style>
-@charset "utf-8";
-/* CSS Document */
-
-body {
-	font-family: Arial, sans-serif;
-	background: url(http://www.clovisbookbarn.com/wp-content/uploads/2013/10/Blue-Sea-Sky-Clouds1.jpg) no-repeat;
-	background-size: cover;
-	
-}
-
-
-
 .overlay {
 	position: fixed;
 	top: 0;
 	bottom: 0;
 	left: 0;
 	right: 0;
-	background: rgba(0, 0, 0, 0.7);
+	background: rgba(151, 118, 118, 0.7);
 	transition: opacity 500ms;
 	visibility: hidden;
 	opacity: 0;
@@ -209,35 +197,38 @@ body {
 <div id="popup1" class="overlay">
 <div class="popup">
   <div class="div1" style="background:#fff">
-  
   <a class="close" href="#">×</a>
-   
   <div class="content" id="quickenquire">
       <h3 style="text-align:center">Send Enquiry</h3>
-  <form action="#">
-          <label for="name">Name</label>
- <input type="text" id="name" name="name">
-      <label for="email">Email Id</label>
-  <input type="email" id="email" name="email">
+
+
+  <form method="POST">
+      {% csrf_token %}
+<label for="name">Name</label>
+<input type="text" id="name" name="name">
   
-      
+<label for="email">Email Id</label>
+<input type="email" id="email" name="email">     
+
 <label for="comment">Your Message</label>
- <textarea></textarea>
- 
-
-  <label for="contact">Contact No</label>
-  <input type="text" id="contact" name="contact">
+<textarea id='comment' name='message'></textarea>
+<label for="contact">Contact No</label>
+<input type="text" id="contact" name="contact">
 
 
   
-<label for="country">Country</label>
-<select id="country" class="input-medium bfh-countries" data-country="US"></select>  
-  <input type="submit" value="Submit">
+<!-- <label for="country">Country</label>
+<select id="country" class="input-medium bfh-countries" data-country="US"></select>   -->
+
+<input type="submit" value="Submit">
 </form>
   </div>
       </div>
 </div>
 </div>
+
+
+
 
 
 
