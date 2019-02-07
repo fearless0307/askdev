@@ -5,7 +5,7 @@ from stories.models import Story, StoryTag, StoryReaction
 from stories.forms import StoryForm, StoryTagForm, StoryReactionForm
 from django.urls import reverse
 import requests
-from questions.models import Tag
+from questions.models import Tag, Reaction
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 
@@ -24,9 +24,11 @@ def stories_home(request):
 
 def stories_detail(request, pk):
     story_url = request.build_absolute_uri(reverse('story-detail', kwargs={'pk': pk}))
+    story = Story.objects.get(id=pk)
     context = {
         'title': 'Story',
-        'story_url': story_url
+        'story_url': story_url,
+        'story': story,
     }
     return render(request, 'stories/story_detail.html', context)
 
@@ -52,7 +54,7 @@ def stories_create(request):
             'story_form': story_form,
             'storytag_form': storytag_form
         }
-    return render(request, 'stories/story_create.html', context)#{'story_form': story_form})
+    return render(request, 'stories/story_create.html', context)
 
 
 @login_required
@@ -77,28 +79,19 @@ def stories_delete(request, pk):
     return redirect('stories-home')
 
 
-# @login_required
-def submit_like_reaction(request, pk):
-    # liked = 1
+@login_required
+def submit_reaction(request, pk, reaction):
     current_user = request.user
-    story = Story.objects.filter(id=pk)
-    story_reaction = StoryReaction.objects.filter(story=pk)
-    context = {
-        'liked': 1,
-        'current_user': current_user,
-        'story': story,
-        'reaction': story_reaction
-    }
-    return render(request, 'stories/test.html', context)
-
-
-# @login_required
-def submit_dislike_reaction(request):
-    disliked = -1
-    return HttpResponse(disliked)
-
-
-# @login_required
-def submit_clap_reaction(request):
-    clapped = 2
-    return HttpResponse(clapped)
+    print(reaction)
+    story = Story.objects.get(id=pk)
+    story_reactions = StoryReaction.objects.filter(story=pk)
+    user_message = ''
+    if len(story_reactions) > 0:
+        for user_react in story_reactions:
+            if story.author == current_user:
+                user_message = 'It seems like you ' + reaction + ' your own post!!'
+            else:
+                user_message = 'Hey!! you ' + reaction + ' this post!'
+    else:
+        user_message = 'Hmmm.....you are the first one to ' + reaction + ' this post!!'
+    return HttpResponse(user_message)
