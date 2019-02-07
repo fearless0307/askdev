@@ -35,22 +35,22 @@ class Question_Detail_class(APIView):
 
 
 class Reply_list(APIView):
-    def get(self, request, format=None):
-        reply = Reply.objects.all()
-        serializer = ReplySerializer(reply, many=True)
+    def get(self, request, qid, pk, format=None):
+        reply = Reply.objects.filter(answer_id=pk).all()
+        serializer = ReplySerializer(reply,context={'request': request},many=True)
         return Response(serializer.data)
 
 
 class Reply_detail(APIView):
     def get_object(self, pk):
         try:
-            return Reply.objects.get(pk=pk)
+            return Reply.objects.filter(id=pk).first()
         except Reply.DoesNotExist:
             return Http404
 
     def get(self, request, pk, format=None):
-        reply = Reply.objects.get(pk=pk)
-        serializer = ReplySerializer(reply)
+        reply = self.get_object(pk)
+        serializer = ReplySerializer(reply, context={'request': request})
         return Response(serializer.data)
 
 

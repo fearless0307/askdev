@@ -21,3 +21,4 @@ class FavouriteQuestionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = FavouriteQuestion
+        fileds = ('question','author')

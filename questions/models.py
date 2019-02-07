@@ -54,6 +54,8 @@ class Reply(models.Model):
         return f'User {self.author.id} Answer {self.answer.id}'\
                 ' Reply {self.reply}'
 
+    
+
 
 class Reaction(models.Model):
     name = models.CharField(max_length=75)

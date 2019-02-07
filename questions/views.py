@@ -1,15 +1,17 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 import requests
 from datetime import datetime
 from questions.models import Question
-
+from django.urls import reverse
 
 def questions_home(request):
-    url = 'http://127.0.0.1:8000/api/questions/'
-    response = requests.get(url)
-    api_data = response.json()
-    return render(request, 'questions/home.html', {'questions': api_data,'url':questions_url})
+    # questions_url = 'http://127.0.0.1:8000/api/questions/'
+    # response = requests.get(questions_url)
+    api_data = ""#response.json()
+    questions_url = request.build_absolute_uri(reverse('questions'))
+    # print(questions_url)
+    return render(request, 'questions/home.html', {'questions': api_data,'questions_url':questions_url})
 
 
 def question_detail(request,pk):
@@ -30,6 +32,7 @@ def question_create(request):
         user  = User.objects.get(id=request.user.id)
         question = Question(author=user,question=form['question'])
         question.save()
+        redirect('questions/home.html')
     return render(request, 'questions/question_create.html')
 
 
@@ -42,10 +45,12 @@ def question_delete(request,pk):
 def question_update(request,pk):
     if request.method == 'POST': 
         form = request.POST 
-        print("form=",form,request.user.id)
+        # print("form=",form,request.user.id)
         question = Question.objects.get(id=pk)
+        # print("done=done",question)
         if question is not None:
+            print("done")
             question.question = form['question']
             question.save()
-            return render(request, 'questions/home.html')
+            return redirect('questions-home')
     return render(request, 'questions/question_create.html')
