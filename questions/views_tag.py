@@ -2,6 +2,7 @@ from django.shortcuts import render
 from questions.models import Tag, QuestionTag, Answer
 import wikipedia
 import requests
+from django.contrib.auth.decorators import login_required
 
 
 def tag_home(request):

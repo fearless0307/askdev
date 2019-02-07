@@ -34,7 +34,7 @@ urlpatterns = [
 
     # reply api
     path('replies/', views.Reply_list.as_view()),
-    path('replies/<int:pk>/', views.Reply_detail.as_view()),
+    path('replies/<int:pk>/', views.Reply_detail.as_view(),name='reply-detail'),
 
     
 ]

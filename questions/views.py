@@ -9,7 +9,7 @@ def questions_home(request):
     url = 'http://127.0.0.1:8000/api/questions/'
     response = requests.get(url)
     api_data = response.json()
-    return render(request, 'questions/home.html', {'questions': api_data,'url':questions_url})
+    return render(request, 'questions/home.html', {'questions': api_data,'requests':requests})
 
 
 def question_detail(request,pk):
