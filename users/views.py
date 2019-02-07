@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from users.models import Profile
+from users.models import Profile, FavouriteQuestion
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -44,6 +44,11 @@ def profile(request):
 
 @login_required
 def fav_questions(request):
-    print(request.user)
-    return render(request, 'users/fav_questions.html')
+    # print(request.user)
+    fav = FavouriteQuestion.objects.filter(author= request.user)
+    print(fav)
+    print(fav[0].author)
+    print(fav[0].question.question)
+    return render(request, 'users/fav_questions.html',{'questions': fav})
+
 
