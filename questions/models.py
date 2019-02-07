@@ -60,7 +60,7 @@ class Reaction(models.Model):
     score = models.IntegerField()
 
     def __str__(self):
-        return f'Reaction {self.name} : Score {self.score}'
+        return f'Reaction {self.name} : Score {self.score} : ID {self.id}'
 
 
 class QuestionReaction(models.Model):

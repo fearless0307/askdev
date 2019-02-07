@@ -20,6 +20,6 @@ def tag_detail(request, pk):
     context = {
         'questions': QuestionTag.objects.filter(tag=tag.id),
         'tag': tag.name,
-        'detail': wikipedia.summary(tag.name + 'Programming', sentences=3)
+        # 'detail': wikipedia.summary(tag.name + 'Programming', sentences=3)
     }
     return render(request, 'questions/tag_detail.html', context)

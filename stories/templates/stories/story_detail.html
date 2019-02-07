@@ -4,10 +4,19 @@
     <div class="col-10 col-md-11">
         <a href="#" class="mr-2">{{ story.author }}</a>
         <h2><a class="article-title" href="#">{{ story.title }}</a></h2>
-        <h6><a href="#">#{{tags.tag.name}}</a> <a href="#">#tag2</a></h6>
+        <h6><a href="#">#{{tags.tag.name}}</a></h6>
         <p>{{ story.story | safe }}</p>
-        {#<a href="{% url 'stories-edit' pk=story.pk%}" class="btn btn-default">Edit Story</a>#}
-        {#<a href="{% url 'stories-delete' pk=story.pk %}" class="btn btn-default">Delete</a>#}
+        <div>
+            <a href="{% url 'stories-like' pk=story.pk%}" class="btn">&#x1F44D</a>
+            <a href="#" class="btn">&#x1F44E</a>
+            <a href="#" class="btn">&#x1F44F</a>
+            <!-- <a href="#" class="btn">&#x1F525</a>
+            <a href="#" class="btn">&#x2665</a> -->
+        </div>
+        <div style="text-align:center">
+            <a href="{% url 'stories-edit' pk=story.pk %}" class="btn btn-primary">Update</a>
+            <a href="{% url 'stories-delete' pk=story.pk %}" class="btn btn-danger">Delete</a>
+        </div>
     </div>
 </div>
 {% endblock %}

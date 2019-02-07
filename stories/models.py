@@ -16,8 +16,7 @@ class Story(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'Author : {self.author} ID : {self.author.id}' +\
-               ' Title : {self.title}'
+        return f'Author : {self.author} Author ID : {self.author.id} Story ID : {self.id}'
 
     def get_absolute_url(self):
         return reverse('stories-detail', kwargs={'pk': self.pk})
@@ -37,5 +36,4 @@ class StoryReaction(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'User {self.author.id} : Story {self.story.id}'\
-                ' : Reaction {self.reaction.id}'
+        return f'User {self.author} : Story {self.story.id} : Reaction-score {self.reaction.score} ID {self.id}'
