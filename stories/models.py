@@ -36,4 +36,4 @@ class StoryReaction(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'User {self.author} : Story {self.story.id} : Reaction-score {self.reaction.score} ID {self.id}'
+        return f'User {self.author} : Story ID {self.story.id} : Reaction-score {self.reaction.score} ID {self.id}'
