@@ -13,3 +13,9 @@ class StoryTagForm(forms.ModelForm):
     class Meta:
         model = StoryTag
         fields = ('tag',)
+
+class StoryReactionForm(forms.ModelForm):
+
+    class Meta:
+        model = StoryReaction
+        fields = '__all__'
