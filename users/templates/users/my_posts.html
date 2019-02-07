@@ -1,0 +1,29 @@
+{% extends "questions/base.html" %}
+{% load static %}
+{% block content %}
+
+<h4>Questions asked</h4>
+{% for question in my_questions %}
+<!-- {{ question.author }} -->
+  <div class="card bg-white mb-4">
+    <div class="card-body">       
+        <a class="mr-2" href="#">{{ question.question }}</a>
+        <small class="text-muted">{{ question.modified_at|date:"F d, Y" }}</small>
+       
+      </div>
+  </div>
+  {% endfor %}
+
+  <h4>Questions answered</h4>
+  {% for answer in my_answers %}
+  <!-- {{ answer.question.question }} -->
+    <div class="card bg-white mb-4">
+      <div class="card-body">       
+          <a class="article-title"> {{ answer.question.question }}</a><br>
+          <a class="mr-2" href="#">{{ answer.answer }}</a>
+          <small class="text-muted">{{ answer.modified_at|date:"F d, Y" }}</small>
+      
+        </div>
+    </div>
+    {% endfor %}
+  {% endblock content %}  

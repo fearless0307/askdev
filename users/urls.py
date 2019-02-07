@@ -2,6 +2,7 @@ from django.urls import path, include
 from users import views as user_views
 from django.contrib.auth import views as auth_views
 
+from questions import views_tag
 
 urlpatterns = [
     path('register/', user_views.register, name='register'),
@@ -14,4 +15,6 @@ urlpatterns = [
     path('password-reset-complete/',auth_views.PasswordResetCompleteView.as_view(template_name='users/password_reset_complete.html'),name='password_reset_complete'),
 
     path('fav/', user_views.fav_questions, name='fav-questions'),
+    path('myposts/', user_views.my_posts, name='my-posts'),
+
 ]
