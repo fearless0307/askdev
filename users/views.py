@@ -49,8 +49,8 @@ def fav_questions(request):
     current_user = request.user
     fav = FavouriteQuestion.objects.filter(author= current_user)
     print(fav)
-    # return render(request, 'users/fav_questions.html',{'questions': fav})
-    return render(request, 'questions/tag_detail.html',{'questions': fav})  #rendering to tag_detail
+    return render(request, 'users/fav_questions.html',{'questions': fav})
+    #return render(request, 'questions/tag_detail.html',{'questions': fav})  #rendering to tag_detail
 
 #It will show all the posts of an logined user
 @login_required

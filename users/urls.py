@@ -2,7 +2,7 @@ from django.urls import path, include
 from users import views as user_views
 from django.contrib.auth import views as auth_views
 
-from questions import views_tag
+#from questions import views_tag
 
 urlpatterns = [
     path('register/', user_views.register, name='register'),
