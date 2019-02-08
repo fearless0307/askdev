@@ -8,6 +8,8 @@ urlpatterns = [
     path('questions/<int:pk>/', views.question_detail,
          name="questions-detail"),
     path('questions/add/', views.question_create, name="questions-add"),
+     path('answers/add/', views.answer_create, name="add-answer"),
+      path('replies/add/', views.reply_create, name="add-reply"),
     path('questions/<int:pk>/edit/', views.question_update,
          name="questions-edit"),
     path('questions/<int:pk>/delete/',

@@ -21,9 +21,3 @@ class QuestionReactionForm(forms.ModelForm):
         model = QuestionReaction
         fields = '__all__'
 
-
-class AnswerForm(forms.ModelForm):
-
-    class Meta:
-        model = Answer
-        fields = ('answer',)
