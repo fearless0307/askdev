@@ -101,8 +101,7 @@ def submit_reaction(request, pk, reaction):
     if len(story_reactions) > 0:
         for user_react in story_reactions:
             if story.author == current_user:
-                user_message = 'It seems like you ' + reaction +\
-                               ' your own post!!'
+                user_message = 'It seems like you already ' + reaction + ' this post!!'
             else:
                 user_message = 'Hey!! you ' + reaction + ' this post!'
     else:
