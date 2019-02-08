@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import Http404, HttpResponse
 from django.urls import reverse
+from django.db.models import Q
 
 from rest_framework import request, status
 from rest_framework.views import APIView
@@ -31,7 +32,11 @@ def all_api(request):
 class Question_class(APIView):
 
     def get(self, request, format=None):
-        question = Question.objects.all()
+        search = request.GET.get('search', '')
+        if search == '':
+            question = Question.objects.all()
+        else:
+            question = Question.objects.filter(Q(question__icontains=search)|Q(author__username__icontains=search)).all()
         serializer = QuestionSerializer(question,
                                         context={'request': request},
                                         many=True)

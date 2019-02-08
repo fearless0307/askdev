@@ -33,13 +33,13 @@
 {% endblock views %}
 
 {% block content %}
-<div class="card bg-white mb-4">
+<!-- <div class="card bg-white mb-4">
   <div class="card-body">
     <h2>Join the discussion</h2>
     <h4>Comment and be a part of what the internet is talking about!</h4>
     <button class="btn btn-primary">Join Now!</button>
   </div>
-</div>
+</div> -->
 {% endblock content %}
 
 {% block scripts %}
@@ -55,6 +55,7 @@
     console.log("Showing stories");
     console.log(stories);
     let stories_html = '';
+    let stories_body_divs = [];
     stories.forEach(story => {
       let username = '';
       let profile_pic_url = '';
@@ -105,11 +106,11 @@
             '<div class="col-2 col-md-1 p-0">' +
             '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle"></div>' +
             '<div class="col-10 col-md-11 story-body">' +
-            '<h2><a href="' + story_url + '">' + story.title + '</a></h2>' +
-            '<h4><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
+            '<h2><a id="title-link" href="' + story_url + '">' + story.title + '</a></h2>' +
+            '<h4 id="username-link" ><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
             '<h6>' + tags + '</h6></div></div>' +
             '<div class="row mt-4"><div class="col-8">' +
-            '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F' +
+            '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' +
             reaction_score + '</button></div>' +
             '<div class="col-4 text-right">' +
             '<span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
@@ -137,7 +138,7 @@
             '<h2><a href="' + story_url + '">' + story.title + '</a></h2>' +
             '<h4><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
             '<h6>' + tags + '</h6>' +
-            '' + story_story + '' +
+            '<div id="story'+story.id+'">' + story_story + '</div>' +
             '<img class="img-fluid rounded" src="' + firstImage + '"></div></div>' +
             '<div class="row mt-4"><div class="col-8">' +
             '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' + reaction_score + '</button></div>' +
@@ -145,10 +146,15 @@
             '<span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
             '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
       }
+      stories_body_divs.push('#story'+story.id);
       stories_html = stories_html + story_html;
     });
     $("#main-body").html($("#main-body").html() + stories_html);
+    stories_body_divs.forEach(element => {
+      console.log(element);
+      let text = $(element).text().replace(/\s+/g, " ").substring(0, 300) + ' ...';
+      $(element).text(text);
+    });
   }
 </script>
-
 {% endblock scripts %}

@@ -24,7 +24,8 @@
       {% csrf_token %}
       {{ story_form.media }}
       {{ story_form | crispy }}
-      <input type="text" placeholder="Choose tags" multiple class="tags_data w-100" data-url="/api/tags/data/" name="tags">
+      <label for="tags">Tags*</label>
+      <input type="text" id="tags" placeholder="Choose tags" multiple class="tags_data w-100" data-url="/api/tags/data/" name="tags">
       <div class="text-right mt-2">
         <button type="submit" class="btn btn-success"><i class="far fa-plus-square"></i> Add Story</button>
       </div>
