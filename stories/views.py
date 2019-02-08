@@ -87,23 +87,24 @@ def stories_edit(request, pk):
 @login_required
 def stories_delete(request, pk):
     story = Story.objects.get(pk=pk).delete()
-    return redirect('stories-home')
+    messages.success(
+                request, f'Your story has been deleted successfully!', extra_tags='success')
+    return redirect('user-profile')
 
 
 @login_required
-def submit_reaction(request, pk, reaction):
+def submit_reaction(request, pk, name):
     current_user = request.user
-    # print(reaction)
     story = Story.objects.get(id=pk)
-    story_reactions = StoryReaction.objects.filter(story=pk)
-    user_message = ''
-    if len(story_reactions) > 0:
-        for user_react in story_reactions:
-            if story.author == current_user:
-                user_message = 'It seems like you already ' + reaction + ' this post!!'
-            else:
-                user_message = 'Hey!! you ' + reaction + ' this post!'
+    name = '&#x'+name
+    reaction = Reaction.objects.filter(name=name).first()
+    story_reactions = StoryReaction.objects.filter(story=story, author=current_user).first()
+    if story_reactions is not None:
+        messages.error(request, f'You already gives reaction on this story!',
+                           extra_tags='danger')
     else:
-        user_message = 'Hmmm.....you are the first one to ' + reaction +\
-                       ' this post!!'
-    return HttpResponse(user_message)
+        story_reactions = StoryReaction(story=story, reaction=reaction, author=current_user)
+        story_reactions.save()
+        messages.success(
+                request, f'Your reaction has been added!', extra_tags='success')
+    return redirect('stories-detail', pk=pk)

@@ -3,9 +3,9 @@ import requests
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
-from questions.forms import QuestionForm, QuestionTagForm
+from questions.forms import QuestionForm
 from datetime import datetime
-from questions.models import Question, Answer, Reply
+from questions.models import Question, Answer, Reply, QuestionTag, Reaction, QuestionReaction
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -41,11 +41,10 @@ def questions_search(request):
 def question_detail(request, pk):
     question_url = request.build_absolute_uri(
         reverse('question-detail', kwargs={'pk': pk}))
-    print("question=url ==", question_url)
+    # print("question=url ==", question_url)
     context = {
         'title': 'Question',
         'question_url': question_url,
-        
     }
     return render(request, 'questions/question_detail.html', context)
 
@@ -83,7 +82,9 @@ def question_create(request):
 def question_delete(request, pk):
     question = Question.objects.get(id=pk)
     question.delete()
-    return render(request, 'questions/question_create.html')
+    messages.success(
+                request, f'Your question has been deleted successfully!', extra_tags='success')
+    return redirect('user-profile')
 
 
 @login_required
@@ -105,23 +106,19 @@ def answer_create(request):
     
     if request.method == 'POST':
         try:
-            print("inside")
             answer = request.POST.get('answer')
             qid = request.POST.get('question')
             question = Question.objects.get(id=qid)
             if request.user.id ==question.author_id:
-                messages.success(request, f'You Can not answer your own question ',extra_tags='warning')
+                messages.success(request, f'You Can not answer your own question!',extra_tags='warning')
             else:
-                user  = User.objects.get(id=request.user.id)
+                user  = request.user
                 answer =Answer(author=user,question=question,answer=answer)
-                print("id=",answer)
                 answer.save()
-                messages.success(request, f'Answer Posted ',extra_tags='success')
-                print("answer",answer)
-                print("question",qid)
+                messages.success(request, f'Your Answer Posted!',extra_tags='success')
         except:
             # print
-            messages.success(request, f'Some Thing Went Wrong',extra_tags='error')
+            messages.success(request, f'Something went wrong!',extra_tags='error')
        
     return redirect('questions-detail', pk=qid)
 
@@ -147,3 +144,21 @@ def reply_create(request):
         #     messages.success(request, f'Some Thing Went Wrong',extra_tags='error')
        
     return redirect('questions-detail', pk=qid)
+
+
+@login_required
+def submit_reaction(request, pk, name):
+    current_user = request.user
+    question = Question.objects.get(id=pk)
+    name = '&#x'+name
+    reaction = Reaction.objects.filter(name=name).first()
+    question_reactions = QuestionReaction.objects.filter(question=question, author=current_user).first()
+    if question_reactions is not None:
+        messages.error(request, f'You already gives reaction on this question!',
+                           extra_tags='danger')
+    else:
+        question_reactions = QuestionReaction(question=question, reaction=reaction, author=current_user)
+        question_reactions.save()
+        messages.success(
+                request, f'Your reaction has been added!', extra_tags='success')
+    return redirect('questions-detail', pk=pk)

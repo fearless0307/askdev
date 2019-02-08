@@ -8,9 +8,19 @@
     </div>
     <div class="col-12 col-sm-12 col-md-12 col-lg-10 col-xl-10 view-type">
       <span>VIEW</span>
-      <span><a href="{% url 'stories-home' %}?view=card"><i class="fas fa-th-large"></i></a></span>
-      <span><a href="{% url 'stories-home' %}?view=detail"><i class="fas fa-bars"></i></a></span>
-      <span><a href="{% url 'stories-home' %}?view=list"><i class="fas fa-align-justify"></i></a></span>
+      {% if view_type == 'list' %}
+      <span class="view-button" ><a href="{% url 'stories-home' %}?view=card"><i class="fas fa-th-large"></i></a></span>
+      <span class="view-button" ><a href="{% url 'stories-home' %}?view=detail"><i class="fas fa-bars"></i></a></span>
+      <span class="view-active" ><a href="{% url 'stories-home' %}?view=list"><i class="fas fa-align-justify"></i></a></span>
+      {% elif view_type == 'detail' %}
+      <span class="view-button" ><a href="{% url 'stories-home' %}?view=card"><i class="fas fa-th-large"></i></a></span>
+      <span class="view-active" ><a href="{% url 'stories-home' %}?view=detail"><i class="fas fa-bars"></i></a></span>
+      <span class="view-button" ><a href="{% url 'stories-home' %}?view=list"><i class="fas fa-align-justify"></i></a></span>
+      {% else %}
+      <span class="view-active" ><a href="{% url 'stories-home' %}?view=card"><i class="fas fa-th-large"></i></a></span>
+      <span class="view-button" ><a href="{% url 'stories-home' %}?view=detail"><i class="fas fa-bars"></i></a></span>
+      <span class="view-button" ><a href="{% url 'stories-home' %}?view=list"><i class="fas fa-align-justify"></i></a></span>
+      {% endif %}
       <span class="border h-100"></span>
       <span>SORT</span>
       <span>
@@ -81,6 +91,15 @@
         reactions.add(element.reaction_name);
         reaction_score += element.reaction_score;
       });
+
+      let reaction_set = '';
+      for(r of reactions){
+        reaction_set = reaction_set + r + ' ';
+      }
+      if(reaction_set == ''){
+        reaction_set = '&#x1F44D';
+      }
+
       console.log(reactions);
       console.log(reaction_score);
       let story_html = "";
@@ -110,9 +129,9 @@
             '<h4 id="username-link" ><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
             '<h6>' + tags + '</h6></div></div>' +
             '<div class="row mt-4"><div class="col-8">' +
-            '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' +
+            '<button class="btn rounded border">'+reaction_set+' ' +
             reaction_score + '</button></div>' +
-            '<div class="col-4 text-right">' +
+            '<div class="col-4 text-right share-link">' +
             '<span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
             '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
           break;
@@ -121,13 +140,13 @@
             '<div class="row"><div class="col-2 col-md-1 p-0">' +
             '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle"></div>' +
             '<div class="col-6 col-md-8 story-body">' +
-            '<h2><a href="' + story_url + '">' + story.title + '</a></h2>' +
-            '<h4><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
+            '<h2><a id="title-link" href="' + story_url + '">' + story.title + '</a></h2>' +
+            '<h4 id="username-link"><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
             '<h6>' + tags + '</h6></div>' +
             '<div class="col-4 col-md-3"><img class="img-fluid rounded" src="' + firstImage + '"></div></div>' +
-            '<div class="row mt-4"><div class="col-8"><button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' +
+            '<div class="row mt-4"><div class="col-8"><button class="btn rounded border">'+reaction_set+' ' +
             reaction_score + '</button></div>' +
-            '<div class="col-4 text-right"><span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
+            '<div class="col-4 text-right share-link"><span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
             '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
           break;
         default:
@@ -135,14 +154,14 @@
             '<div class="row"><div class="col-2 col-md-1 p-0">' +
             '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle"></div>' +
             '<div class="col-10 col-md-11 story-body">' +
-            '<h2><a href="' + story_url + '">' + story.title + '</a></h2>' +
-            '<h4><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
+            '<h2><a id="title-link" href="' + story_url + '">' + story.title + '</a></h2>' +
+            '<h4 id="username-link"><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
             '<h6>' + tags + '</h6>' +
             '<div id="story'+story.id+'">' + story_story + '</div>' +
             '<img class="img-fluid rounded" src="' + firstImage + '"></div></div>' +
             '<div class="row mt-4"><div class="col-8">' +
-            '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' + reaction_score + '</button></div>' +
-            '<div class="col-4 text-right">' +
+            '<button class="btn rounded border">'+reaction_set+' ' + reaction_score + '</button></div>' +
+            '<div class="col-4 text-right share-link">' +
             '<span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
             '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
       }
