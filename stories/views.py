@@ -49,9 +49,6 @@ def stories_create(request):
             for tag_id in tag_ids:
                 story_tag = StoryTag(tag_id=tag_id, story_id=story_post.id)
                 story_tag.save()
-            # story_post.created_at = timezone.now()
-            # storytag_post.story_id = story_post.id
-            # storytag_post.save()
             messages.success(
                 request, f'Your story has been added!', extra_tags='success')
             return redirect('stories-home')
@@ -60,10 +57,8 @@ def stories_create(request):
                            extra_tags='danger')
     else:
         story_form = StoryForm()
-        # storytag_form = StoryTagForm()
         context = {
             'story_form': story_form,
-            # 'storytag_form': storytag_form
         }
     return render(request, 'stories/story_create.html', context)
 
@@ -76,9 +71,13 @@ def stories_edit(request, pk):
         if story_form.is_valid():
             story_post = story_form.save(commit=False)
             story_post.author = request.user
-            story_post.created_at = timezone.now()
             story_post.save()
+            messages.success(
+                request, f'Your story has been updated!', extra_tags='success')
             return redirect('stories-detail', pk=story_post.pk)
+        else:
+            messages.error(request, f'Something went wrong!',
+                           extra_tags='danger')
     else:
         story_form = StoryForm(instance=story)
     return render(request, 'stories/story_edit.html',

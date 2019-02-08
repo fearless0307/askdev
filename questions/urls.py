@@ -5,6 +5,7 @@ from questions import views, views_tag
 urlpatterns = [
     path('', views.questions_home, name='questions-home'),
     path('questions/', views.questions_home, name='questions-home'),
+    path('questions/search/', views.questions_search, name='questions-search'),
     path('questions/<int:pk>/', views.question_detail,
          name="questions-detail"),
     path('questions/add/', views.question_create, name="questions-add"),
