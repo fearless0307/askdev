@@ -4,7 +4,7 @@ import requests
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
-from questions.forms import QuestionForm, QuestionTagForm, AnswerForm
+from questions.forms import QuestionForm, QuestionTagForm
 from datetime import datetime
 from questions.models import Question, Answer, Reply
 from django.urls import reverse
@@ -28,11 +28,10 @@ def questions_home(request):
 def question_detail(request,pk):
     question_url = request.build_absolute_uri(reverse('question-detail', kwargs={'pk': pk}))
     print("question=url ==",question_url)
-    answer_form = AnswerForm()
     context = {
         'title': 'Question',
         'question_url': question_url,
-        'answer_form': answer_form,
+        
     }
     return render(request, 'questions/question_detail.html', context)
 

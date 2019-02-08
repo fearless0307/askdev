@@ -152,6 +152,9 @@
     });
     // console.log(reactions);
     // console.log(reaction_score);
+    if (question.description==null){
+      question.description = " "
+    }
     action = "{%url 'add-answer' %}"
     console.log("action=",action)
     question_html = '<div class="card bg-white mb-4 p-4">' +
