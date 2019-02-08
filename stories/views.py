@@ -94,7 +94,7 @@ def stories_delete(request, pk):
 @login_required
 def submit_reaction(request, pk, reaction):
     current_user = request.user
-    print(reaction)
+    # print(reaction)
     story = Story.objects.get(id=pk)
     story_reactions = StoryReaction.objects.filter(story=pk)
     user_message = ''

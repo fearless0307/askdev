@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
+from stories.models import Story
 from users.models import Profile, FavouriteQuestion
 from users.forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from questions.models import Question, Answer
@@ -43,6 +43,23 @@ def profile(request):
     }
     return render(request, 'users/profile.html', context)
 
+#It will show the user profile with all of his details
+@login_required
+def display_user_profile(request):
+    user = request.user
+    my_questions = Question.objects.filter(author=user)
+    my_answers = Answer.objects.filter(author=user)
+    my_stories = Story.objects.filter(author=user)
+    my_fav_questions = FavouriteQuestion.objects.filter(author=user)
+    content = {
+        'my_questions': my_questions,
+        'my_answers': my_answers,
+        'my_stories': my_stories,
+        'my_fav_questions':my_fav_questions
+    }
+    # pass
+    return render(request, 'users/user_profile.html', content)
+
 
 # It will show all the bookmarked questions of the user
 @login_required
@@ -61,12 +78,13 @@ def fav_questions(request):
 def my_posts(request):
     current_user = request.user
     my_questions = Question.objects.filter(author=current_user)
-    print(my_questions)
+    # print(my_questions)
     my_answers = Answer.objects.filter(author=current_user)
-    print(my_answers)
+    # print(my_answers)
+    my_stories = Story.objects.filter(author=current_user)
     content = {
         'my_questions': my_questions,
-        'my_answers': my_answers
+        'my_answers': my_answers,
+        'my_stories': my_stories
     }
-    print(my_answers[0].author)
     return render(request, 'users/my_posts.html', content)

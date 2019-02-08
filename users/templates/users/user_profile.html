@@ -1,6 +1,26 @@
 {% extends "questions/base.html" %}
 {% load static %}
+<!-- User Profile edit page !! -->
+{% load crispy_forms_tags %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'users/css/user_style.css' %}">
+{% endblock css %}
 {% block content %}
+<div class="card bg-white mb-4">
+  <div class="card-body pb-5">
+    <img class=" img-fluid w-100" style="height:500px" src="{{ user.profile.cover_image.url }}" alt="cover image">
+    <div class="col">
+      <div class="row" style="margin-top: -100px;">
+        <img class="rounded-circle border" style="width: 200px; height: 200px;" src="{{ user.profile.profile_image.url }}">
+        <div class="col">
+          <h1 class="pl-3 pt-3">{{ user.username }}</h1>
+          <h4 class="pl-3 ">{{ user.email }}</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <a href="{% url 'my-posts' %}" class="btn btn-primary">Previous activites</a> -->
 
 <nav>
   <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -10,11 +30,18 @@
       aria-controls="nav-question_answered" aria-selected="false">Questions answered - {{ my_answers|length }}</a>
     <a class="nav-item nav-link" id="nav-story-tab" data-toggle="tab" href="#nav-story" role="tab" aria-controls="nav-story"
       aria-selected="false">Stories written - {{ my_stories|length }}</a>
+    <a class="nav-item nav-link" id="nav-fav-questions-tab" data-toggle="tab" href="#nav-fav_questions" role="tab" 
+    aria-controls="nav-fav_questions" aria-selected="false">favourite Questions - {{ my_fav_questions|length }}</a>
   </div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
   <div class="tab-pane fade show active" id="nav-question_asked" role="tabpanel" aria-labelledby="nav-question_asked-tab">
     <!-- Question asked content -->
+    {% if my_questions|length == 0 %}
+    <div class="bg-white text-center">
+      <h3 class="text-muted">No Question asked</h3>
+    </div>
+    {% else %}
     <table class="table table-hover bg-white">
       <tbody>
         <thead>
@@ -39,9 +66,15 @@
         {% endfor %}
       </tbody>
     </table>
+    {% endif %}
   </div>
   <div class="tab-pane fade" id="nav-question_answered" role="tabpanel" aria-labelledby="nav-question_answered-tab">
     <!-- Question answerd content -->
+    {% if my_answers|length == 0 %}
+    <div class="bg-white text-center py-3">
+      <h4>No Question answered!</h4>
+    </div>
+    {% else %}
     <table class="table table-hover bg-white">
 
       <thead>
@@ -67,8 +100,14 @@
         {% endfor %}
       </tbody>
     </table>
+    {% endif %}
   </div>
   <div class="tab-pane fade" id="nav-story" role="tabpanel" aria-labelledby="nav-story-tab">
+    {% if my_stories|length == 0 %}
+    <div class="bg-white text-center py-3">
+        <h4>No Stories written!</h4>
+      </div>
+    {% else %}
     <table class="table table-hover bg-white">
       <tbody>
         <thead>
@@ -86,6 +125,38 @@
           <th scope="row">{{ loop.index }}</th>
           <td> {{story.title}} </td>
           <td><small class="text-muted">{{ story.modified_at|date:"F d, Y" }}</small></td>
+          <td><a href="{% url 'stories-detail' pk=story.pk %}" class="btn btn-success"><i class="fas fa-eye"></i></a></td>
+          <td><a href="{% url 'stories-edit' pk=story.pk %}" class="btn btn-warning"><i class="fas fa-edit"></i></a></td>
+          <td><a href="{% url 'stories-delete' pk=story.pk %}" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+    
+  </div>
+
+  <div class="tab-pane fade" id="nav-fav_questions" role="tabpanel" aria-labelledby="nav-fav-questions-tab">
+    {% if my_fav_questions|length == 0 %}
+    <div class="bg-white text-center py-3">
+        <h4>No Favourites!!</h4>
+      </div>
+    {% else %}
+    <table class="table table-hover bg-white">
+      <tbody>
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Favourites</th>
+            <th scope="col">view</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        {% for fav in my_fav_questions %}
+        <tr class="border">
+          <th scope="row">{{ loop.index }}</th>
+          <td> {{ fav.question }} </td>
           <td><a href="#" class="btn btn-success"><i class="fas fa-eye"></i></a></td>
           <td><a href="#" class="btn btn-warning"><i class="fas fa-edit"></i></a></td>
           <td><a href="#" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a></td>
@@ -93,6 +164,8 @@
         {% endfor %}
       </tbody>
     </table>
+    {% endif %}
   </div>
+</div>
 
   {% endblock content %}
