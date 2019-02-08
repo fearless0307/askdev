@@ -48,6 +48,9 @@ def testing(request):
         return redirect('questions-home')
     return render(request, 'questions/testing.html')
 
+def about(request):
+    return render(request, 'questions/about.html')
+
 
 # Send as many times you like
 # Also can send to multiple people
@@ -61,9 +64,8 @@ def main(form):
     name = form['name']
     email = form['email']
     message = form['message']
-    contact = form['contact']
 
-    message = 'From '+ email + "<br>" + message
+    message = 'From '+ name + ' ' +email + "<br>" + message
     
     for send_to_email in all_email:
         email = 'askdev.jpba@gmail.com'
@@ -84,5 +86,3 @@ def main(form):
         server.send_message(msg)
         del msg 
         server.quit()
-        # <QueryDict: {'csrfmiddlewaretoken': ['SoItB6okJXWmWnZqJaDRVM1KqjAZpNPxRIsj4hgWhy74H5RXglA6yhvsoInuXcsz'],
-        #  'name': ['Python'], 'email': ['admin@log.com'], 'Message': ['my mesaeg'], 'contact': ['']}>

@@ -1,0 +1,61 @@
+{% extends "questions/base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- <style>
+.about-img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+</style> -->
+<div class="bg-white rounded py-2">
+	<div class="p-4">
+		<h2>AskDev</h2>
+		<hr>
+		<h2>Free, friendly, and inclusive programming community!</h2>
+		<p class="text-justify"> This is a safe place where you can discuss your ongoing projects, write blog posts about
+			up-and-coming trends in software development, share what you’ve learned with the rest
+			of community, get career advice from fellow developers, and provide feedback to others
+			in a non-toxic, friendly environment.</p>
+	</div>
+	<div class="row justify-content-center">
+		<div class="col-11 col-sm-10 col-md-8 col-lg-7 col-xl-6">
+			<img src="{% static 'questions/img/askdev_write.jpg' %}" class="rounded img-fluid" alt="Cinque Terre">
+		</div>
+	</div>
+
+	<div class="p-4">
+		<h2>Our Story: in brief</h2>
+		<p class="text-justify">
+			AskDev co-founders, Bhola, Amrit, Prajwal and Jaiprakash, have known each other and been best friends for
+			over 10 Days. One day, they asked an open-ended question in one of the online dev
+			communities they loved and participated in. While they were waiting for someone to help
+			them out and give some advice, they received a ban because open-ended questions weren’t
+			allowed. Needles to say, neither of them saw that coming. 🤷‍
+
+			At that moment, they realized that there were no online places where developers could
+			freely start a discussion and expect to get an opinionated and a friendly answer.
+			They did the only thing they could - built such a place themselves. Since day one,
+			developers who joined AskDev have had thousands of friendly discussions, wrote
+			numerous blog posts, and shared the most interesting links with the rest of community.
+			We’re constantly looking for ways to improve and provide an even better environment for
+			all the developers from all the parts of the world.
+		</p>
+	</div>
+	<div class="row justify-content-center">
+		<div class="col-11 col-sm-10 col-md-8 col-lg-7 col-xl-6">
+			<img src="{% static 'questions/img/askdev_read.jpg' %}" class="img-fluid rounded" alt="Cinque Terre">
+		</div>
+	</div>
+	<div class="p-4">
+		<h2>Who are we?</h2>
+		<p class="text-justify">
+			AskDev is built by developers for developers. As the number of users grew,
+			so did the team, and we are now a team of passionate developers and technophiles.
+			Our core interests are technology, continuous improvement, and making the world
+			a more friendlier place for programmers. ;)
+		</p>
+	</div>
+</div>
+{% endblock content %}

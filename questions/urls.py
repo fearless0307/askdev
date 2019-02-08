@@ -18,6 +18,7 @@ urlpatterns = [
          views_tag.tag_question, name='tags-questions'),
     path('tags/<str:name>/stories/', views_tag.tag_story, name='tags-stories'),
 
+    path('about/', views_tag.about, name='about'),
     path('testing/', views_tag.testing, name='testing'),  # can delete
     # path('tags/<str:name>/',views_tag.tag_detail, name='tags-detail'),
 
