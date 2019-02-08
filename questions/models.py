@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 
 
 class Tag(models.Model):
@@ -14,7 +14,7 @@ class Tag(models.Model):
 class Question(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.TextField()
-    description = RichTextField(blank=True, null=True)
+    description = RichTextUploadingField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 

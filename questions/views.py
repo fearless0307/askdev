@@ -1,40 +1,59 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 import requests
+from django.utils import timezone
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required
+from questions.forms import QuestionForm, QuestionTagForm
 from datetime import datetime
 from questions.models import Question
 from django.urls import reverse
 
 
 def questions_home(request):
-    api_data = ""
+    view_type = request.GET.get('view', 'card')
+    
+    print("show view = ",view_type)
     questions_url = request.build_absolute_uri(reverse('questions'))
-    return render(request, 'questions/home.html',
-                  {'questions': api_data, 'questions_url': questions_url})
+    context = {
+        'view_type': view_type,
+        'questions_url':questions_url,
+        'title': 'Questions',
+    }
+    return render(request, 'questions/home.html', context)
 
 
-def question_detail(request, pk):
-    url = 'http://127.0.0.1:8000/api/questions/'+str(pk)+'/'
-    print("pk=", pk, url)
-    response = requests.get(url)
-    api_data = response.json()
-    answer_response = requests.get(api_data['answers'])
-    api_answer_data = answer_response.json()
-    return render(request, 'questions/question_detail.html',
-                  {'question_object': api_data,
-                   'answer_object': api_answer_data})
+def question_detail(request,pk):
+    question_url = request.build_absolute_uri(reverse('question-detail', kwargs={'pk': pk}))
+    print("question=url ==",question_url)
+    context = {
+        'title': 'Question',
+        'question_url': question_url,
+    }
+    return render(request, 'questions/question_detail.html', context)
 
-
+@login_required
 def question_create(request):
-    print("form", request)
     if request.method == 'POST':
-        form = request.POST
-        print("form=", form, request.user.id)
-        user = User.objects.get(id=request.user.id)
-        question = Question(author=user, question=form['question'])
-        question.save()
-        redirect('questions/home.html')
-    return render(request, 'questions/question_create.html')
+        question_form = QuestionForm(request.POST)
+        questiontag_form = QuestionTagForm(request.POST)
+        if question_form.is_valid() and questiontag_form.is_valid():
+            question_post = question_form.save(commit=False)
+            questiontag_post = questiontag_form.save(commit=False)
+            question_post.author = request.user
+            question_post.created_at = timezone.now()
+            question_post.save()
+            questiontag_post.question_id = question_post.id
+            questiontag_post.save()
+            return redirect('stories-home')
+    else:
+        question_form = QuestionForm()
+        questiontag_form = QuestionTagForm()
+        context = {
+            'question_form': question_form,
+            'questiontag_form': questiontag_form
+        }
+    return render(request, 'questions/question_create.html', context)
 
 
 def question_delete(request, pk):

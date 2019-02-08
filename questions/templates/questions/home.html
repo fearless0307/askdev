@@ -48,19 +48,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
 <script>
   let questions_url = '{{ questions_url }}';
-  console.log("url", questions_url)
-  $.ajax({
-    url: questions_url,
-    success: display_questions
-  });
+  let view_type = '{{ view_type }}';
+  console.log("url",questions_url)
+  console.log("view =",view_type)
+  $.ajax({url: questions_url, success: display_questions});
 
-  function display_questions(questions_data) {
-    console.log("Showing questions_data");
-    console.log(questions_data);
-    questions_data.forEach(question => {
+  function display_questions(questions){
+    console.log("Showing questions");
+    console.log(questions);
+    let questions_html = '';
+    questions.forEach(question => {
       let username = '';
       let profile_pic_url = '';
-      console.log(question);
+      console.log("each=",question.question,question.author);
       $.ajax({
         url: question.author,
         success: function (result) {
@@ -69,23 +69,92 @@
         },
         async: false
       });
-      let d = Date.parse(question.modified_at);
-      console.log("paresed=", d);
-      question_url = "{% url 'questions-home'  %}" + question.id + "/";
-      console.log("question_url   ", question_url);
+      let modified_at_moment = moment(Date.parse(question.modified_at)).toNow(true) + " ago";
+      console.log(modified_at_moment);
+      question_url = "{% url 'questions-home' %}" + question.id + "/";
+      console.log(question_url);
       image_url = "{% static 'questions/img/community-back.png' %}";
       tags = question.tags.map(x => '<a href="/tags/' + x.tag_name + '/">#' + x.tag_name + '</a>').join(" ");
-      let question_html =
-        '<div class="card bg-white mb-4 p-4"><div class="row"><div class="col-2 col-md-1 p-0"><img src="' +
-        profile_pic_url +
-        '" class="img-fluid rounded-circle"></div><div class="col-6 col-md-8"><h2><a style="text-decoration:none"href="' +
-        question_url + '">' + question.question + '</a></h2><h4><a href="#">' + username + '</a> - ' + question.modified_at +
-        '</h4><h6>' + tags + '</h6></div><div class="col-4 col-md-3"><img class="img-fluid rounded" src="' +
-        image_url +
-        '"></div></div><div class="row mt-4"><div class="col-8"><button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F 3</button><button class="btn rounded">&#x1F4AC 3</button></div><div class="col-4 text-right"><span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span><span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>'
-      $("#main-body").html($("#main-body").html() + question_html);
+      let reactions = new Set();
+      let reaction_score = 0;
+      question.reactions.forEach(element => {
+        reactions.add(element.reaction_name);
+        reaction_score += element.reaction_score;
+      });
+      console.log(reactions);
+      console.log(reaction_score);
+      let question_html = "";
 
+      var div = document.createElement('div');
+      div.innerHTML = question.description;
+      var allImage = div.getElementsByTagName('img');
+      var firstImage = '';
+      console.log("all=",allImage);
+      for (var i = 0; i < allImage.length; i++) {
+        if (allImage[i].src.indexOf("/media/uploads/") >= 0){
+            firstImage = allImage[i].src;
+            break;
+        }
+      }
+      // var imgSrc = firstImage ? firstImage.src : "";
+      console.log("fimage=",firstImage);
+      // or, if you want the unresolved src, as it appears in the original HTML:
+      // var rawImgSrc = firstImage ? firstImage.getAttribute("src") : "";
+      // console.log(rawImgSrc);
+
+      var question_question = div.innerHTML.replace(/<img alt="" src="\/m[^>]*>/g,"");
+      console.log("image =",question_question)
+      console.log("question_url",question_url)
+      switch (view_type) {
+        case "list":
+          question_html = '<div class="card bg-white mb-4 p-4"><div class="row">' +
+            '<div class="col-2 col-md-1 p-0">' +
+            '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle"></div>' +
+            '<div class="col-10 col-md-11 question-body">' +
+            '<h2><a style="text-decoration:none" style="text-decoration:none" href="' + question_url + '">' + question.question + '</a></h2>' +
+            '<h4><a style="text-decoration:none" href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
+            '<h6>' + tags + '</h6></div></div>' +
+            '<div class="row mt-4"><div class="col-8">' +
+            '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F '+ reaction_score + '</button></div>' +
+            '<div class="col-4 text-right">' +
+            '<span><a style="text-decoration:none" class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
+            '<span><a style="text-decoration:none" href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
+          break;
+        case "detail":
+          question_html = '<div class="card bg-white mb-4 p-4">' +
+            '<div class="row"><div class="col-2 col-md-1 p-0">' +
+            '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle"></div>' +
+            '<div class="col-6 col-md-8 question-body">' +
+            '<h2><a style="text-decoration:none" href="' + question_url + '">' + question.question + '</a></h2>' +
+            '<h4><a style="text-decoration:none" href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
+            '<h6>' + tags + '</h6></div>' +
+            '<div class="col-4 col-md-3"><img class="img-fluid rounded" src="' + firstImage + '"></div></div>' +
+            '<div class="row mt-4"><div class="col-8"><button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' +
+            reaction_score + '</button></div>' +
+            '<div class="col-4 text-right"><span><a style="text-decoration:none" class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
+            '<span><a style="text-decoration:none" href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
+          break;
+        default:
+          question_html = '<div class="card bg-white mb-4 p-4">' +
+            '<div class="row"><div class="col-2 col-md-1 p-0">' +
+            '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle"></div>' +
+            '<div class="col-10 col-md-11 question-body">' +
+            '<h2><a style="text-decoration:none" href="' + question_url + '">' + question.question + '</a></h2>' +
+            '<h4><a style="text-decoration:none" href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
+            '<h6>' + tags + '</h6>' +
+            '' + question_question + '' +
+            '<img class="img-fluid rounded" src="' + firstImage + '"></div></div>' +
+            '<div class="row mt-4"><div class="col-8">' +
+            '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' + reaction_score + '</button></div>' +
+            '<div class="col-4 text-right">' +
+            '<span><a style="text-decoration:none" class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
+            '<span><a style="text-decoration:none" href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
+      }
+      // console.log( $('.question-body img').attr('src') );
+      questions_html = questions_html + question_html;
     });
+    $("#main-body").html($("#main-body").html() + questions_html);
   }
+
 </script>
 {% endblock scripts %}
