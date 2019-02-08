@@ -24,5 +24,3 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['phone', 'profession', 'profile_image', 'cover_image']
-
-
