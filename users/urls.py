@@ -7,7 +7,7 @@ from questions import views_tag
 urlpatterns = [
     path('register/', user_views.register, name='register'),
     path('profile/', user_views.profile, name='profile'),
-    path('user-profile/', user_views.display_user_profile, name='user-profile'),
+    path('profile/show/', user_views.display_user_profile, name='user-profile'),
     path('login/', auth_views.LoginView.as_view(
          template_name='users/login.html'),
          name='login'),
@@ -29,5 +29,5 @@ urlpatterns = [
          name='password_reset_complete'),
 
     path('fav/', user_views.fav_questions, name='fav-questions'),
-    path('myposts/', user_views.my_posts, name='my-posts'),
+#     path('myposts/', user_views.my_posts, name='my-posts'),
 ]

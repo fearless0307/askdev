@@ -1,34 +1,18 @@
 {% extends 'questions/base.html' %}
 {% load static %}
+{% block css %}
+<style>
+  .story-detail-body img {
+    max-width: 100%;
+    height: auto !important;
+  }
+</style>
+{% endblock css %}
 {% block content %}
-{% load static %}
-<div class="card bg-white mb-4 p-4">
-  <div class="col-10 col-md-11">
-    <a href="#" class="mr-2">{{ story.author }}</a>
-    <h2><a class="article-title" href="#">{{ story.title }}</a></h2>
-    <h6><a href="#">#{{tags.tag.name}}</a></h6>
-    <p>{{ story.story | safe }}</p>
-    <div>
-      <a href="{% url 'stories-reaction' pk=story.pk reaction='like'%}" class="btn">&#x1F44D</a>
-      <a href="{% url 'stories-reaction' pk=story.pk reaction='dislike'%}" class="btn">&#x1F44E</a>
-      <a href="{% url 'stories-reaction' pk=story.pk reaction='clap'%}" class="btn">&#x1F44F</a>
-    </div>
-    <div style="text-align:center">
-      <a href="{% url 'stories-edit' pk=story.pk %}" class="btn btn-primary">Update</a>
-      <a href="{% url 'stories-delete' pk=story.pk %}" class="btn btn-danger">Delete</a>
-    </div>
-  </div>
-</div>
-</div>
-<a href="{% url 'stories-edit' pk=story.pk%}" class="btn btn-default">Edit Story</a>
-<a href="{% url 'stories-delete' pk=story.pk %}" class="btn btn-default">Delete</a>
-</div>
+
 {% endblock content %}
 
 {% block scripts %}
-<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-  crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
 <script>
   let story_url = '{{ story_url }}';
   $.ajax({
@@ -55,28 +39,47 @@
     console.log(modified_at_moment);
     story_url = "{% url 'stories-home' %}" + story.id + "/";
 
-    console.log("story_url",story_url);
-    image_url = "{% static 'questions/img/community-back.png' %}";
-    tags = story.tags.map(x => '<a href="/tags/' + x.tag_name + '/">#' + x.tag_name + '</a>').join(" ");
+    console.log("story_url", story_url);
+    tags = story.tags.map(x => '<a class="badge badge-pill badge-info" href="/tags/' + x.tag_name + '/stories/">' + x.tag_name +
+      '</a>').join(" ");
     let reactions = new Set();
     let reaction_score = 0;
     story.reactions.forEach(element => {
       reactions.add(element.reaction_name);
       reaction_score += element.reaction_score;
     });
+
+    let reaction_set = '';
+    for (r of reactions) {
+      reaction_set = reaction_set + r + ' ';
+    }
+    if (reaction_set == '') {
+      reaction_set = '&#x1F44D';
+    }
+
     console.log(reactions);
     console.log(reaction_score);
     story_html = '<div class="card bg-white mb-4 p-4">' +
-      '<h1 class="text-center">' + story.title + '</h1>' +
+      '<h1 class="text-center story-detail-title">' + story.title + '</h1>' +
       '<a href="#" class="mr-2"></a>' +
-      '<h4 class="text-center"><a href="#"><img src="' + profile_pic_url +
+      '<h4 class="text-center" id="username-link"><a href="#"><img src="' + profile_pic_url +
       '" class="img-fluid rounded-circle" style="width: 40px;">' + ' ' + username + '</a></h4>' +
-      '<h6 class="text-center">Published ' + modified_at_moment + '</h6>' +
+      '<h6 class="text-center" id="date-posted">Published ' + modified_at_moment + '</h6>' +
       '<h6 class="text-center">' + tags + '</h6>' +
-      '' + story.story + '' +
+      '<div class="story-detail-body">' + story.story + '</div>' +
       '<div class="row mt-4"><div class="col-8">' +
-      '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' + reaction_score + '</button></div>' +
-      '<div class="col-4 text-right">' +
+      '<button class="btn rounded border mr-2">' + reaction_set + ' ' + reaction_score +
+      '</button><button class="btn rounded border" type="button" id="dropdownReaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus"></i></button>' +
+      '<div class="dropdown-menu text-center" aria-labelledby="dropdownReaction" style="min-width: 9rem;">' +
+      '<a style="text-decoration: none" class="pr-4" href="/stories/' + story.id + '/reaction/add/1F44D/">&#x1F44D</a>' +
+      '<a style="text-decoration: none" class="pr-4" href="/stories/' + story.id + '/reaction/add/1F44E/">&#x1F44E</a>' +
+      '<a style="text-decoration: none" class="" href="/stories/' + story.id +
+      '/reaction/add/1F44F/">&#x1F44F</a><br><br>' +
+      '<a style="text-decoration: none" class="pr-4" href="/stories/' + story.id + '/reaction/add/1F525/">&#x1F525</a>' +
+      '<a style="text-decoration: none" class="pr-4" href="/stories/' + story.id +
+      '/reaction/add/2764/">&#x2764</a></div>' +
+      '</div>' +
+      '<div class="col-4 text-right share-link">' +
       '<span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
       '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
     $("#main-body").html($("#main-body").html() + story_html);

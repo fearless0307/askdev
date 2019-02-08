@@ -8,7 +8,7 @@ urlpatterns = [
     path('stories/<int:pk>/edit/', views.stories_edit, name='stories-edit'),
     path('stories/<int:pk>/delete/', views.stories_delete,
          name='stories-delete'),
-    path('stories/<int:pk>/<reaction>/',
+    path('stories/<int:pk>/reaction/add/<str:name>/',
          views.submit_reaction, name='stories-reaction'),
 
 ]

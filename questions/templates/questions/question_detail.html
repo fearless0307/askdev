@@ -1,118 +1,142 @@
 {% extends "questions/base.html" %}
 {% load crispy_forms_tags %}
 {% load static %}
+
+{% block css %}
+<style>
+  .question-detail-body img {
+    max-width: 100%;
+    height: auto !important;
+  }
+</style>
+{% endblock css %}
+
 {% block content %}
+<!-- <div class="card mt-4 p-4" style="background-color: #EEF9F9  ;">
+  <div class="row">
+    <div class="col-2 col-md-1 p-0">
+      <img src="/media/default_profile.png" class="img-fluid rounded-circle">
+    </div>
+    <div class="col-10 col-md-11 answer-body">
+      <h6 class="mt-4" id="username-link date-posted">
+        <a href="#">username</a> - modified_at
+      </h6>
+      <div class="mt-4 answer-detail-body">
+        answer.answer
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col-8">
+      <button class="btn rounded border">&#x1F44D reaction_score</button>
+    </div>
+  </div>
+</div>
+<div class="card p-0" style="background-color: #EEF9F9  ;">
+  <button class="btn btn-block btn-light" id="answer-id" onclick="showReplies(answer.id)">Show replies</button>
+</div>
+<div id="answer-reply-id">
+  <div class="card bg-light p-4" >
+    
+  </div>
+</div> -->
+
+
 {% endblock content %}
+
 {% block scripts %}
-<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-  crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
 <script>
-  
-  let question_id =""
-  $(document).ready(function(){
-  $("#submit-button").click(function(){
-      console.log("answer clicked=",this.id);
-      user_id ="{{user.is_anonymous}}";
-      console.log("cond=",user_id ,user_id =='True')
-      if (user_id =='True'){
-        console.log("j")
-        $("#submit").prop('disabled', true);
+  let question_id = ""
+  $(document).ready(function () {
 
+    // $("#submit-button").click(function () {
+    //   console.log("answer clicked=", this.id);
+    //   user_id = "{{user.is_anonymous}}";
+    //   console.log("cond=", user_id, user_id == 'True')
+    //   if (user_id == 'True') {
+    //     console.log("j")
+    //     $("#submit").prop('disabled', true);
+
+    //   } else {
+    //     $("#submit").prop('disabled', false);
+    //   }
+    // });
+
+    $("#reply-submit-div").click(function () {
+      user_id = "{{user.is_anonymous}}";
+      if (user_id == 'True') {
+        window.location.replace("{% url 'login' %}?next=/questions/"+question_id);
       }
-      else{
-        $("#submit").prop('disabled', false);
+    });
+
+    $("#answer-submit-div").click(function () {
+      user_id = "{{user.is_anonymous}}";
+      if (user_id == 'True') {
+        window.location.replace("{% url 'login' %}?next=/questions/"+question_id);
       }
-  });
-  });
+    });
 
-
-
-  $(document).ready(function(){
-  $("#reply-submit-button").click(function(){
-      console.log("answer clicked=",this.id);
-      user_id ="{{user.is_anonymous}}";
-      console.log("cond=",user_id ,user_id =='True')
-      if (user_id =='True'){
-        console.log("j",$("#reply-submit"))
-        $("#reply-submit").prop('disabled', true);
-
-      }
-      else{
-        $("#reply-submit").prop('disabled', false);
-      }
-  });
   });
 
+  function showReplies(id) {
+    if ($('#answer-' + id).text() == "Show replies") {
+      $('#answer-' + id).text('Hide replies');
+      if ($('#answer-reply-' + id).html().length > 1) {
+        $('#answer-reply-' + id).toggle('show');
+        return;
+      }
+    } else {
+      $('#answer-' + id).text('Show replies');
+      $('#answer-reply-' + id).toggle('hide');
+      return;
+    }
 
-
-  $(document).ready(function(){
-  $("input").click(function(){
-  	id= this.name
-    answer_url = this.id
-    let replies_html = " "
-    console.log("id = ",id,answer_url);
-    let replies ;
-    console.log("content =",$("#"+id).html(),$("#"+id).html()=="");
-    if ($("#"+id).html() =="" ){
-        
+    $('#answer-reply-' + id).toggle('hide');
+    let temp = answers_url + id + '/';
+    let replies_data = [];
+    $.ajax({
+      url: temp,
+      success: function (result) {
+        replies_data.push(result.replies);
+      },
+      async: false
+    });
+    console.log(replies_data);
+    let replies_html = '<div class="card bg-light p-0">';
+    replies_data[0].forEach(element => {
+      console.log(element);
+      let username = '';
+      let profile_pic_url = '';
       $.ajax({
-          url: answer_url,
-          success: function (result) {
-            replies = result.replies;
-          },
-          async: false
-        });
-      // console.log("replies",replies)
-      replies.forEach(reply => {
-        let username = '';
-        let profile_pic_url = '';
-        let reply_html =""
-        console.log("l===",reply.reply)
-        $.ajax({
-          url: reply.author,
-          success: function (result) {
-            username = result.username;
-            profile_pic_url = result.profile_image;
-          },
-          async: false
-        });
-        reply_html = '<div class="card bg-black  pl-5 pt-2 pb-2  ml-5  rounded"><div class="row">' +
-        '<div class="col-1 p-0">'+
-        '<a href="#"><img src="'+ profile_pic_url+'" class="img-fluid rounded-circle " style="width: 30px;"></a>' +
-        '</div>'+
-        '<div class="col-7">'+
-        '<form class="">'+
-        '<div class="">'+
-        '<p>'+reply.reply+'</p>'+
-        '</div>'+
-        '</form>'+
-        '</div>'+
-        '</div></div>';
-        console.log("name = " ,username);
-        replies_html = replies_html+reply_html
+        url: element.author,
+        success: function (result) {
+          username = result.username;
+          profile_pic_url = result.profile_image;
+        },
+        async: false
       });
-      $("#"+id).html( replies_html);
-    }
-    
-    $("#"+id).toggle('show');
-    property = this.value
-    if(property=='show replies'&& replies_html !=" "){
-      this.value = 'hide replies';
-    }
-    else {
-      this.value = 'show replies';
-    }
 
-    console.log("view =",property)
-    console.log("hello",id)
-    
-   
-  });
-});
+      replies_html = replies_html + '<div class="row py-2 px-4">' +
+        '<div class="col-2 col-md-1 p-0">' +
+        '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle">' +
+        '</div>' +
+        '<div class="col-10 col-md-11 answer-body">' +
+        '<h6 class="mt-3" id="username-link date-posted">' +
+        '<a href="#">' + username + '</a>' +
+        '</h6>' +
+        '<div class="mt-2 answer-detail-body">' +
+        element.reply + '</div>' +
+        '</div>' +
+        '</div><hr>';
+
+    });
+    replies_html = replies_html + '</div>';
+    $('#answer-reply-' + id).html(replies_html);
+    $('#answer-reply-' + id).toggle('show');
+  }
 
   let question_url = '{{ question_url }}';
-  let answers_url ="";
+  let answers_url = "";
   $.ajax({
     url: question_url,
     success: display_question,
@@ -121,14 +145,11 @@
 
   function display_question(question) {
     console.log("Showing question");
-    // console.log(question);
     let question_html = '';
     let username = '';
     let profile_pic_url = '';
     question_id = question.id;
     answers_url = question.answers
-    console.log("ans=",answers_url)
-    // console.log(question);
     $.ajax({
       url: question.author,
       success: function (result) {
@@ -138,11 +159,9 @@
       async: false
     });
     let modified_at_moment = moment(Date.parse(question.modified_at)).toNow(true) + " ago";
-    // console.log(modified_at_moment);
-    // question_url = "{% url 'questions-home' %}" + question.id + "/";
-    // console.log(question_url);
-    image_url = "{% static 'questions/img/community-back.png' %}";
-    tags = question.tags.map(x => '<a href="/tags/' + x.tag_name + '/">#' + x.tag_name + '</a>').join(" ");
+
+    tags = question.tags.map(x => '<a class="badge badge-pill badge-info" href="/tags/' + x.tag_name + '/questions/">#' +
+      x.tag_name + '</a>').join(" ");
     // console.log("tags")
     let reactions = new Set();
     let reaction_score = 0;
@@ -150,55 +169,76 @@
       reactions.add(element.reaction_name);
       reaction_score += element.reaction_score;
     });
-    // console.log(reactions);
-    // console.log(reaction_score);
-    if (question.description==null){
-      question.description = " "
+
+    let reaction_set = '';
+    for (r of reactions) {
+      reaction_set = reaction_set + r + ' ';
+    }
+    if (reaction_set == '') {
+      reaction_set = '&#x1F44D';
+    }
+
+    if (question.description == 'NULL') {
+      question.description = "No description available";
     }
     action = "{%url 'add-answer' %}"
-    console.log("action=",action)
-    question_html = '<div class="card bg-white mb-4 p-4">' +
-        '<h4 class=""><a href="#"><img src="' + profile_pic_url +
-      '" class="img-fluid rounded-circle" style="width: 80px;"></a></h4>' +
-      '<h1 class="pl-5 ml-5">' + question.question + '</h1>' +
-      '<a href="#" class="mr-2"></a>' +
-      
-      '<h6 class="text-center">Published ' + modified_at_moment + '</h6>' +
-      '<h6 class="text-center">' + tags + '</h6>' +
-      '' + question.description + '' +
-      '<div class="row mt-4"><div class="col-8">' +
-      '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' + reaction_score + '</button></div>' +
-      '<div class="col-4 text-right">' +
+
+    question_html = '<div class="card bg-white mb-2 p-4">' +
+      '<h1 class="">' + question.question + '</h1>' +
+      '<h4 id="username-link"><a href="#">' +
+      '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle" style="width: 40px;">' + username + '' +
+      '</a></h4>' +
+      '<h6 id="date-posted">Published ' + modified_at_moment + '</h6>' +
+      '<h6>' + tags + '</h6>' +
+      '<div class="mt-3 question-detail-body">' + question.description + '</div>' +
+      '<div class="row mt-4">' +
+      '<div class="col-8">' +
+      '<button class="btn rounded border mr-2">' + reaction_set + ' ' + reaction_score + ' </button>' +
+      '<button class="btn rounded border" type="button" id="dropdownReaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus"></i></button>' +
+      '<div class="dropdown-menu text-center" aria-labelledby="dropdownReaction" style="min-width: 9rem;">' +
+      '<a style="text-decoration: none" class="pr-4" href="/questions/' + question.id +
+      '/reaction/add/1F44D/">&#x1F44D</a>' +
+      '<a style="text-decoration: none" class="pr-4" href="/questions/' + question.id +
+      '/reaction/add/1F44E/">&#x1F44E</a>' +
+      '<a style="text-decoration: none" class="" href="/questions/' + question.id +
+      '/reaction/add/1F44F/">&#x1F44F</a><br><br>' +
+      '<a style="text-decoration: none" class="pr-4" href="/questions/' + question.id +
+      '/reaction/add/1F525/">&#x1F525</a>' +
+      '<a style="text-decoration: none" class="pr-4" href="/questions/' + question.id +
+      '/reaction/add/2764/">&#x2764</a></div></div>' +
+      '<div class="col-4 text-right share-link">' +
       '<span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
-      '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>'+
-      '<div class="card bg-white mb-4 p-4 rounded"><div class="row">' +
-      '<div class="col-1 p-0">'+
-      '<a href="#"><img src="{{ user.profile.profile_image.url }}" class="img-fluid rounded-circle" style="width: 60px;"></a>' +
-      '</div>'+
-      '<div class="col-11" id ="submit-button">'+
-      '<form class="" method = "POST" action='+action+' >' +
-      ' {% csrf_token %}'+
-      
-      ' <textarea class="form-control " name ="answer" value="" id="validationTextarea" class="post-answer" placeholder="Write your answer…" required></textarea>'+
-      ' <div class="invalid-feedback"> Please enter a message in the textarea. </div>'+
-      '<input type="hidden" name="question" value="'+question.id+'" >'+
-      '<input class="btn btn-outline-success mt-2" id= "submit" type="submit" value="Submit">'+
-      '</form>'+
-      '</div>'+
-      '</div></div>';   
+      '<span><a href="#"><i class="fas fa-share-alt"></i></a></span>' +
+      '</div></div></div>';
+
+    question_html = question_html + '<div class="card bg-white mb-4 p-4 rounded" id="answer-submit-div">' +
+      '<div class="row">' +
+      '<div class="col-2 col-md-1 p-0">' +
+      '<a href="#"><img src="/media/default_profile.png" class="img-fluid rounded-circle w-100"></a>' +
+      '</div>' +
+      '<div class="col-10 col-md-11" id="submit-button">' +
+      '<form method="POST" action="' + action + '">' +
+      '{% csrf_token %}' +
+      '<textarea class="form-control post-answer" name="answer" value=""' +
+      ' placeholder="Write your answer …" required></textarea>' +
+      '<input type="hidden" name="question" value="' + question.id + '">' +
+      '<button class="btn btn-outline-success mt-2" type="submit" value="Submit your answer"><i class="fas fa-cloud-upload-alt"></i> Submit answer</button>' +
+      '</form></div></div></div>';
+
     $("#main-body").html($("#main-body").html() + question_html);
   }
-//###############################################################################################################
+  //###############################################################################################################
 
-  console.log("ans2 =",answers_url)
+  console.log("ans2 =", answers_url)
   $.ajax({
-      url: answers_url,
-      success: display_answers
-    });
+    url: answers_url,
+    success: display_answers
+  });
 
   function display_answers(answers) {
     console.log("Showing answers");
-    let answers_html =" "
+    console.log(answers_url);
+    let answers_html = " ";
     answers.forEach(answer => {
       let username = '';
       let profile_pic_url = '';
@@ -210,65 +250,87 @@
         },
         async: false
       });
-      console.log("username=",username);
-      console.log("answer detail =",answer);
       let modified_at = moment(Date.parse(answer.modified_at)).toNow(true) + " ago";
-      console.log(modified_at);
-      image_url = "{% static 'questions/img/community-back.png' %}";
       let answer_html = "";
-      // var div = document.createElement('div');
-      // div.innerHTML = answer.answer;
-      reaction_score= 0
-      console.log(reaction_score )
-      console.log("answer_reply = ",answer.replies)
+      reaction_score = 0;
       reply_action = "{%url 'add-reply' %}"
-      console.log("reply_url=",reply_action)
       answer_html = '<div class="card  mt-5 p-4" style="background-color: #EEF9F9  ;"><div class="row">' +
-            '<div class="col-2 col-md-1 p-0">' +
-            '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle"></div>' +
-            '<div class="col-10 col-md-11 answer-body">' +
-            '<h6   class="mt-4 " style="color:grey"><a  class="mr-5 "style="text-decoration:none ;color:black;font:lighter" href="#"><strong>' + username + '</strong></a>  ' + modified_at + '</h6>' +
-            '<h6 class="mt-4"><a style="text-decoration:none;color:black" style="text-decoration:none" href="#">' + answer.answer + '</a></h6>' +
-            
-            '<h6>' + " " + '</h6></div></div>' +
-            '<div class="row mt-4"><div class="col-8">' +
-            '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' + reaction_score + '</button></div>' +
-            '</div></div>'+
-           
-            '<input type="button" name="'+ answer.id+'"  value="show replies" id='+ answer.url+' style="color:blue" class="btn  btn-light btn-lg btn-block">'+
-            
-                '<div class="card bg-white  p-4 rounded" id="reply-submit-button"><div class="row">' +
-                '<div class="col-1 p-0">'+
-                '<a href="#"><img src="{{ user.profile.profile_image.url }}" class="img-fluid rounded-circle" style="width: 60px;"></a>' +
-                '</div>'+
-                '<div class="col-11" >'+
-                '<form class="" method="POST" action='+reply_action+' >' +
-                    ' {% csrf_token %}'+
-                '<div class="">'+
-                ' <textarea class="form-control " id="validationTextarea"  name= "reply"placeholder="Write your Reply..." required></textarea>'+
-                // ' <div class="invalid-feedback"> Please enter a message in the textarea. </div>'+
-                '<input type="hidden" name="answer" value="'+answer.id+'" >'+
-                '<input type="hidden" name="question" value="'+question_id+'" >'+
-                '<input class="btn btn-outline-success mt-2" id="reply-submit" type="submit" value="Submit">'+
-                '</div>'+
-                '</form>'+
-                '</div>'+
-                '</div></div></div>'+
-                '<div id="'+answer.id+'" class="ml-5" style="display:none">'+
-                '</div>';
-            
-            
-      answers_html = answers_html+answer_html
+        '<div class="col-2 col-md-1 p-0">' +
+        '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle"></div>' +
+        '<div class="col-10 col-md-11 answer-body">' +
+        '<h6   class="mt-4 " style="color:grey"><a  class="mr-5 "style="text-decoration:none ;color:black;font:lighter" href="#"><strong>' +
+        username + '</strong></a>  ' + modified_at + '</h6>' +
+        '<h6 class="mt-4"><a style="text-decoration:none;color:black" style="text-decoration:none" href="#">' +
+        answer.answer + '</a></h6>' +
+
+        '<h6>' + " " + '</h6></div></div>' +
+        '<div class="row mt-4"><div class="col-8">' +
+        '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' + reaction_score + '</button></div>' +
+        '</div></div>' +
+
+        '<input type="button" name="' + answer.id + '"  value="show replies" id=' + answer.url +
+        ' style="color:blue" class="btn  btn-light btn-lg btn-block">' +
+
+        '<div class="card bg-white  p-4 rounded" id="reply-submit-button"><div class="row">' +
+        '<div class="col-1 p-0">' +
+        '<a href="#"><img src="{{ user.profile.profile_image.url }}" class="img-fluid rounded-circle" style="width: 60px;"></a>' +
+        '</div>' +
+        '<div class="col-11" >' +
+        '<form class="" method="POST" action=' + reply_action + ' >' +
+        ' {% csrf_token %}' +
+        '<div class="">' +
+        ' <textarea class="form-control " id="validationTextarea"  name= "reply"placeholder="Write your Reply..." required></textarea>' +
+        // ' <div class="invalid-feedback"> Please enter a message in the textarea. </div>'+
+        '<input type="hidden" name="answer" value="' + answer.id + '" >' +
+        '<input type="hidden" name="question" value="' + question_id + '" >' +
+        '<input class="btn btn-outline-success mt-2" id="reply-submit" type="submit" value="Submit">' +
+        '</div>' +
+        '</form>' +
+        '</div>' +
+        '</div></div></div>' +
+        '<div id="' + answer.id + '" class="ml-5" style="display:none">' +
+        '</div>';
+
+      answer_html = '<div class="card mt-4 p-4" style="background-color: #EEF9F9;">' +
+        '<div class="row">' +
+        '<div class="col-2 col-md-1 p-0">' +
+        '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle">' +
+        '</div>' +
+        '<div class="col-10 col-md-11 answer-body">' +
+        '<h6 class="mt-4" id="username-link date-posted">' +
+        '<a href="#">' + username + '</a> - ' + modified_at + '' +
+        '</h6>' +
+        '<div class="mt-4 answer-detail-body">' +
+        answer.answer + '</div>' +
+        '</div></div>' +
+        '<div class="row mt-4">' +
+        '<div class="col-8">' +
+        '<button class="btn rounded border">&#x1F44D ' + reaction_score + '</button>' +
+        '</div></div></div>' +
+        '<div class="card p-0">' +
+        '<button class="btn btn-block btn-light" id="answer-' + answer.id + '" onclick="showReplies(' + answer.id +
+        ')">Show replies</button>' +
+        '</div>' +
+        '<div id="answer-reply-' + answer.id + '"></div>';
+
+      answer_html = answer_html + '<div class="card bg-light p-4 rounded" id="reply-submit-div">' +
+        '<div class="row">' +
+        '<div class="col-2 col-md-1 p-0">' +
+        '<a href="#"><img src="{{ user.profile.profile_image.url }}" class="img-fluid rounded-circle"></a>' +
+        '</div>' +
+        '<div class="col-10 col-md-11">' +
+        '<form method="POST" action="' + reply_action + '">' +
+        '{% csrf_token %}' +
+        '<textarea class="form-control " name="reply" placeholder="Write your Reply..." required></textarea>' +
+        '<input type="hidden" name="answer" value="' + answer.id + '">' +
+        '<input type="hidden" name="question" value="' + question_id + '">' +
+        '<input class="btn btn-outline-success mt-2" id="reply-submit" type="submit" value="Submit">' +
+        '</form></div></div></div>';
+
+      answers_html = answers_html + answer_html
     });
     $("#main-body").html($("#main-body").html() + answers_html);
   }
-    
-
-
-
-
-
-
 </script>
 
 {% endblock scripts %}

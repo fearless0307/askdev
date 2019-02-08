@@ -20,6 +20,7 @@
 
   <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Major+Mono+Display" rel="stylesheet">
 
   {% block css %}{% endblock css %}
 
@@ -40,7 +41,7 @@
         <button class="btn"><i class="fas fa-bars"></i></button>
         <img class="img-fluid" src="{% static 'questions/img/favicon.ico' %}" style="width: 32px;">
       </div>
-      <div class="col-lg-2 col-xl-2 d-none d-lg-block d-xl-block">
+      <div class="col-lg-2 col-xl-2 d-none d-lg-block d-xl-block brand-icon">
         <a href="{% url 'questions-home' %}"><img class="img-fluid" src="{% static 'questions/img/favicon.ico' %}"
             style="width: 32px;"> AskDev</a>
       </div>
@@ -153,7 +154,7 @@
           </div>
         </div>
       </div>
-      <div class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-8" id="main-body">
+      <div class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-8 mb-5" id="main-body">
 
         {% if messages %}
         {% for message in messages %}
