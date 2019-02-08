@@ -3,7 +3,7 @@ import requests
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
-from questions.forms import QuestionForm, QuestionTagForm
+from questions.forms import QuestionForm
 from datetime import datetime
 from questions.models import Question, Answer, Reply
 from django.urls import reverse
