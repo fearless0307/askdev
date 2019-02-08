@@ -48,6 +48,9 @@ def testing(request):
         return redirect('questions-home')
     return render(request, 'questions/testing.html')
 
+def about(request):
+    return render(request, 'questions/about.html')
+
 
 # Send as many times you like
 # Also can send to multiple people
@@ -56,17 +59,17 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 def main(form):
-    all_email = ['amrit.prasad@mountblue.io','jaiprakash.patidar@mountblue.io', 'bhola.kumar@mountblue.io', 'prajwal.chigod@mountblue.io']
+    #all_email = ['amrit.prasad@mountblue.io','jaiprakash.patidar@mountblue.io', 'bhola.kumar@mountblue.io', 'prajwal.chigod@mountblue.io']
+    all_email = ['kramrit6@gmail.com']
     name = form['name']
     email = form['email']
     message = form['message']
-    contact = form['contact']
 
-    message = 'From '+ name + "\n" + message
+    message = 'From '+ name + ' ' +email + "<br>" + message
     
     for send_to_email in all_email:
-        email = 'dummyamrit@gmail.com'
-        password = 'google@321'
+        email = 'askdev.jpba@gmail.com'
+        password = 'AskDev@12'
 
         subject = "AskDev"
         server = smtplib.SMTP(host='smtp.gmail.com', port=587)
@@ -83,5 +86,3 @@ def main(form):
         server.send_message(msg)
         del msg 
         server.quit()
-        # <QueryDict: {'csrfmiddlewaretoken': ['SoItB6okJXWmWnZqJaDRVM1KqjAZpNPxRIsj4hgWhy74H5RXglA6yhvsoInuXcsz'],
-        #  'name': ['Python'], 'email': ['admin@log.com'], 'Message': ['my mesaeg'], 'contact': ['']}>

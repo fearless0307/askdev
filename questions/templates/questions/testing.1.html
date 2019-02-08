@@ -5,12 +5,11 @@
 	bottom: 0;
 	left: 0;
 	right: 0;
-	/* background: rgba(151, 118, 118, 0.7); */
+	background: rgba(151, 118, 118, 0.7);
 	transition: opacity 500ms;
 	visibility: hidden;
 	opacity: 0;
 }
-
 .overlay:target {
 	visibility: visible;
 	opacity: 1;
@@ -197,7 +196,7 @@
 
 <div id="popup1" class="overlay">
 <div class="popup">
-  <div class="div1" style="background:rgb(170, 165, 165)">
+  <div class="div1" style="background:#fff">
   <a class="close" href="#">×</a>
   <div class="content" id="quickenquire">
       <h3 style="text-align:center">Send Enquiry</h3>
@@ -213,6 +212,13 @@
 
 <label for="comment">Your Message</label>
 <textarea id='comment' name='message'></textarea>
+<label for="contact">Contact No</label>
+<input type="text" id="contact" name="contact">
+
+
+  
+<!-- <label for="country">Country</label>
+<select id="country" class="input-medium bfh-countries" data-country="US"></select>   -->
 
 <input type="submit" value="Submit">
 </form>
