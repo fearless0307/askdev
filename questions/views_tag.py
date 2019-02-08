@@ -56,17 +56,18 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 def main(form):
-    all_email = ['amrit.prasad@mountblue.io','jaiprakash.patidar@mountblue.io', 'bhola.kumar@mountblue.io', 'prajwal.chigod@mountblue.io']
+    #all_email = ['amrit.prasad@mountblue.io','jaiprakash.patidar@mountblue.io', 'bhola.kumar@mountblue.io', 'prajwal.chigod@mountblue.io']
+    all_email = ['kramrit6@gmail.com']
     name = form['name']
     email = form['email']
     message = form['message']
     contact = form['contact']
 
-    message = 'From '+ name + "\n" + message
+    message = 'From '+ email + "<br>" + message
     
     for send_to_email in all_email:
-        email = 'dummyamrit@gmail.com'
-        password = 'google@321'
+        email = 'askdev.jpba@gmail.com'
+        password = 'AskDev@12'
 
         subject = "AskDev"
         server = smtplib.SMTP(host='smtp.gmail.com', port=587)
