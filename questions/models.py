@@ -33,7 +33,7 @@ class QuestionTag(models.Model):
 class Answer(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    answer = models.TextField()
+    answer = RichTextUploadingField(blank=True,null=True)
     is_satisfied = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)

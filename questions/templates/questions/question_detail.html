@@ -1,13 +1,51 @@
 {% extends "questions/base.html" %}
+{% load crispy_forms_tags %}
 {% load static %}
 {% block content %}
-{% load static %}
 {% endblock content %}
 {% block scripts %}
 <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
   crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
 <script>
+  
+  let question_id =""
+  $(document).ready(function(){
+  $("#submit-button").click(function(){
+      console.log("answer clicked=",this.id);
+      user_id ="{{user.is_anonymous}}";
+      console.log("cond=",user_id ,user_id =='True')
+      if (user_id =='True'){
+        console.log("j")
+        $("#submit").prop('disabled', true);
+
+      }
+      else{
+        $("#submit").prop('disabled', false);
+      }
+  });
+  });
+
+
+
+  $(document).ready(function(){
+  $("#reply-submit-button").click(function(){
+      console.log("answer clicked=",this.id);
+      user_id ="{{user.is_anonymous}}";
+      console.log("cond=",user_id ,user_id =='True')
+      if (user_id =='True'){
+        console.log("j",$("#reply-submit"))
+        $("#reply-submit").prop('disabled', true);
+
+      }
+      else{
+        $("#reply-submit").prop('disabled', false);
+      }
+  });
+  });
+
+
+
   $(document).ready(function(){
   $("input").click(function(){
   	id= this.name
@@ -87,6 +125,7 @@
     let question_html = '';
     let username = '';
     let profile_pic_url = '';
+    question_id = question.id;
     answers_url = question.answers
     console.log("ans=",answers_url)
     // console.log(question);
@@ -113,6 +152,8 @@
     });
     // console.log(reactions);
     // console.log(reaction_score);
+    action = "{%url 'add-answer' %}"
+    console.log("action=",action)
     question_html = '<div class="card bg-white mb-4 p-4">' +
         '<h4 class=""><a href="#"><img src="' + profile_pic_url +
       '" class="img-fluid rounded-circle" style="width: 80px;"></a></h4>' +
@@ -131,15 +172,17 @@
       '<div class="col-1 p-0">'+
       '<a href="#"><img src="{{ user.profile.profile_image.url }}" class="img-fluid rounded-circle" style="width: 60px;"></a>' +
       '</div>'+
-      '<div class="col-11">'+
-      '<form class="">'+
-      '<div class="">'+
-      ' <textarea class="form-control " id="validationTextarea" placeholder="Write your answer…" required></textarea>'+
+      '<div class="col-11" id ="submit-button">'+
+      '<form class="" method = "POST" action='+action+' >' +
+      ' {% csrf_token %}'+
+      
+      ' <textarea class="form-control " name ="answer" value="" id="validationTextarea" class="post-answer" placeholder="Write your answer…" required></textarea>'+
       ' <div class="invalid-feedback"> Please enter a message in the textarea. </div>'+
-      '</div>'+
+      '<input type="hidden" name="question" value="'+question.id+'" >'+
+      '<input class="btn btn-outline-success mt-2" id= "submit" type="submit" value="Submit">'+
       '</form>'+
       '</div>'+
-      '</div></div>';
+      '</div></div>';   
     $("#main-body").html($("#main-body").html() + question_html);
   }
 //###############################################################################################################
@@ -175,7 +218,9 @@
       reaction_score= 0
       console.log(reaction_score )
       console.log("answer_reply = ",answer.replies)
-      answer_html = '<div class="card bg-white mt-5 p-4"><div class="row">' +
+      reply_action = "{%url 'add-reply' %}"
+      console.log("reply_url=",reply_action)
+      answer_html = '<div class="card  mt-5 p-4" style="background-color: #EEF9F9  ;"><div class="row">' +
             '<div class="col-2 col-md-1 p-0">' +
             '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle"></div>' +
             '<div class="col-10 col-md-11 answer-body">' +
@@ -189,16 +234,19 @@
            
             '<input type="button" name="'+ answer.id+'"  value="show replies" id='+ answer.url+' style="color:blue" class="btn  btn-light btn-lg btn-block">'+
             
-                '<div class="card bg-white  p-4 rounded"><div class="row">' +
+                '<div class="card bg-white  p-4 rounded" id="reply-submit-button"><div class="row">' +
                 '<div class="col-1 p-0">'+
                 '<a href="#"><img src="{{ user.profile.profile_image.url }}" class="img-fluid rounded-circle" style="width: 60px;"></a>' +
                 '</div>'+
-                '<div class="col-11">'+
-                '<form class="">'+
+                '<div class="col-11" >'+
+                '<form class="" method="POST" action='+reply_action+' >' +
+                    ' {% csrf_token %}'+
                 '<div class="">'+
-                ' <textarea class="form-control " id="validationTextarea" placeholder="Write your Reply..." required></textarea>'+
+                ' <textarea class="form-control " id="validationTextarea"  name= "reply"placeholder="Write your Reply..." required></textarea>'+
                 // ' <div class="invalid-feedback"> Please enter a message in the textarea. </div>'+
-                '<input class="btn btn-outline-success mt-2" type="submit" value="Submit">'+
+                '<input type="hidden" name="answer" value="'+answer.id+'" >'+
+                '<input type="hidden" name="question" value="'+question_id+'" >'+
+                '<input class="btn btn-outline-success mt-2" id="reply-submit" type="submit" value="Submit">'+
                 '</div>'+
                 '</form>'+
                 '</div>'+
