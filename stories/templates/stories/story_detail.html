@@ -1,5 +1,6 @@
 {% extends 'questions/base.html' %}
 {% block content %}
+{% load static %}
 <div class="card bg-white mb-4 p-4">
     <div class="col-10 col-md-11">
         <a href="#" class="mr-2">{{ story.author }}</a>
@@ -57,7 +58,8 @@
     let modified_at_moment = moment(Date.parse(story.modified_at)).toNow(true) + " ago";
     console.log(modified_at_moment);
     story_url = "{% url 'stories-home' %}" + story.id + "/";
-    console.log(story_url);
+
+    console.log("story_url",story_url);
     image_url = "{% static 'questions/img/community-back.png' %}";
     tags = story.tags.map(x => '<a href="/tags/' + x.tag_name + '/">#' + x.tag_name + '</a>').join(" ");
     let reactions = new Set();

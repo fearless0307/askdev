@@ -1,64 +1,222 @@
 {% extends "questions/base.html" %}
 {% block content %}
-<div class="continer-fluid ">
-   
-    <div class="row">
-        <div class="container p-3 col-md-8">
-            <div class="card  p-3">
-                <div class="card-header text-muted" style="display: inline-block">
-                    <img class='rounded-circle' src="">
-                    <a class="text-primary disabled" href="#" style="text-decoration:none">
-                        By {{question_object.author_name}}
-                    </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{question_object.modified_at|date:'F d, Y' }}
-                   
-                    {% if question_object.author_id == user.id%}
-                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href ="{% url 'question-update' question_object.id%}">Update</a>
-                        <a class="btn btn-Danger btn-sm mt-1 mb-1" href ="{% url 'question-delete' question_object.id%}">Delete</a>
-
-                    {% endif %}
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">{{question_object.question}}</h5>
-                    
-                   <!-- <p class="card-text pl-3">{{question_object.content}}.</p> -->
-                    <!--<a href="#" class="btn btn-primary">Go somewhere</a> -->
-
-                </div>
-            </div>
-        </div>
-
-    </div>
-    
-    
-    {% for answer in answer_object%}
-        <div class="row">
-            <div class="container p-3 col-md-8">
-                <div class="card  p-3">
-                    <div class="card-header text-muted" style="display: inline-block">
-                        <img class='rounded-circle' src="">
-                        Answered  By
-                        <a class="text-primary disabled" href="#" style="text-decoration:none">
-                          {{answer.author_name}} 
-                        </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      
-                        {% if object.author_id == user.id%}
-                            <a class="btn btn-secondary btn-sm mt-1 mb-1" href ="{% url 'post-update' object.id%}">Update</a>
-                            <a class="btn btn-Danger btn-sm mt-1 mb-1" href ="{% url 'post-delete' object.id%}">Delete</a>
-
-                        {% endif %}
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{answer.answer}}</h5>
-                    <!-- <p class="card-text pl-3">{{object.content}}.</p> -->
-                        <!--<a href="#" class="btn btn-primary">Go somewhere</a> -->
-
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    {% endfor %}
-    
-
-</div>
+{% load static %}
 {% endblock content %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
+<script>
+  $(document).ready(function(){
+  $("input").click(function(){
+  	id= this.name
+    answer_url = this.id
+    let replies_html = " "
+    console.log("id = ",id,answer_url);
+    let replies ;
+    console.log("content =",$("#"+id).html(),$("#"+id).html()=="");
+    if ($("#"+id).html() =="" ){
+        
+      $.ajax({
+          url: answer_url,
+          success: function (result) {
+            replies = result.replies;
+          },
+          async: false
+        });
+      // console.log("replies",replies)
+      replies.forEach(reply => {
+        let username = '';
+        let profile_pic_url = '';
+        let reply_html =""
+        console.log("l===",reply.reply)
+        $.ajax({
+          url: reply.author,
+          success: function (result) {
+            username = result.username;
+            profile_pic_url = result.profile_image;
+          },
+          async: false
+        });
+        reply_html = '<div class="card bg-black  pl-5 pt-2 pb-2  ml-5  rounded"><div class="row">' +
+        '<div class="col-1 p-0">'+
+        '<a href="#"><img src="'+ profile_pic_url+'" class="img-fluid rounded-circle " style="width: 30px;"></a>' +
+        '</div>'+
+        '<div class="col-7">'+
+        '<form class="">'+
+        '<div class="">'+
+        '<p>'+reply.reply+'</p>'+
+        '</div>'+
+        '</form>'+
+        '</div>'+
+        '</div></div>';
+        console.log("name = " ,username);
+        replies_html = replies_html+reply_html
+      });
+      $("#"+id).html( replies_html);
+    }
+    
+    $("#"+id).toggle('show');
+    property = this.value
+    if(property=='show replies'&& replies_html !=" "){
+      this.value = 'hide replies';
+    }
+    else {
+      this.value = 'show replies';
+    }
+
+    console.log("view =",property)
+    console.log("hello",id)
+    
+   
+  });
+});
+
+  let question_url = '{{ question_url }}';
+  let answers_url ="";
+  $.ajax({
+    url: question_url,
+    success: display_question,
+    async: false
+  });
+
+  function display_question(question) {
+    console.log("Showing question");
+    // console.log(question);
+    let question_html = '';
+    let username = '';
+    let profile_pic_url = '';
+    answers_url = question.answers
+    console.log("ans=",answers_url)
+    // console.log(question);
+    $.ajax({
+      url: question.author,
+      success: function (result) {
+        username = result.username;
+        profile_pic_url = result.profile_image;
+      },
+      async: false
+    });
+    let modified_at_moment = moment(Date.parse(question.modified_at)).toNow(true) + " ago";
+    // console.log(modified_at_moment);
+    // question_url = "{% url 'questions-home' %}" + question.id + "/";
+    // console.log(question_url);
+    image_url = "{% static 'questions/img/community-back.png' %}";
+    tags = question.tags.map(x => '<a href="/tags/' + x.tag_name + '/">#' + x.tag_name + '</a>').join(" ");
+    // console.log("tags")
+    let reactions = new Set();
+    let reaction_score = 0;
+    question.reactions.forEach(element => {
+      reactions.add(element.reaction_name);
+      reaction_score += element.reaction_score;
+    });
+    // console.log(reactions);
+    // console.log(reaction_score);
+    question_html = '<div class="card bg-white mb-4 p-4">' +
+        '<h4 class=""><a href="#"><img src="' + profile_pic_url +
+      '" class="img-fluid rounded-circle" style="width: 80px;"></a></h4>' +
+      '<h1 class="pl-5 ml-5">' + question.question + '</h1>' +
+      '<a href="#" class="mr-2"></a>' +
+      
+      '<h6 class="text-center">Published ' + modified_at_moment + '</h6>' +
+      '<h6 class="text-center">' + tags + '</h6>' +
+      '' + question.description + '' +
+      '<div class="row mt-4"><div class="col-8">' +
+      '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' + reaction_score + '</button></div>' +
+      '<div class="col-4 text-right">' +
+      '<span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
+      '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>'+
+      '<div class="card bg-white mb-4 p-4 rounded"><div class="row">' +
+      '<div class="col-1 p-0">'+
+      '<a href="#"><img src="{{ user.profile.profile_image.url }}" class="img-fluid rounded-circle" style="width: 60px;"></a>' +
+      '</div>'+
+      '<div class="col-11">'+
+      '<form class="">'+
+      '<div class="">'+
+      ' <textarea class="form-control " id="validationTextarea" placeholder="Write your answer…" required></textarea>'+
+      ' <div class="invalid-feedback"> Please enter a message in the textarea. </div>'+
+      '</div>'+
+      '</form>'+
+      '</div>'+
+      '</div></div>';
+    $("#main-body").html($("#main-body").html() + question_html);
+  }
+//###############################################################################################################
+
+  console.log("ans2 =",answers_url)
+  $.ajax({
+      url: answers_url,
+      success: display_answers
+    });
+
+  function display_answers(answers) {
+    console.log("Showing answers");
+    let answers_html =" "
+    answers.forEach(answer => {
+      let username = '';
+      let profile_pic_url = '';
+      $.ajax({
+        url: answer.author,
+        success: function (result) {
+          username = result.username;
+          profile_pic_url = result.profile_image;
+        },
+        async: false
+      });
+      console.log("username=",username);
+      console.log("answer detail =",answer);
+      let modified_at = moment(Date.parse(answer.modified_at)).toNow(true) + " ago";
+      console.log(modified_at);
+      image_url = "{% static 'questions/img/community-back.png' %}";
+      let answer_html = "";
+      // var div = document.createElement('div');
+      // div.innerHTML = answer.answer;
+      reaction_score= 0
+      console.log(reaction_score )
+      console.log("answer_reply = ",answer.replies)
+      answer_html = '<div class="card bg-white mt-5 p-4"><div class="row">' +
+            '<div class="col-2 col-md-1 p-0">' +
+            '<img src="' + profile_pic_url + '" class="img-fluid rounded-circle"></div>' +
+            '<div class="col-10 col-md-11 answer-body">' +
+            '<h6   class="mt-4 " style="color:grey"><a  class="mr-5 "style="text-decoration:none ;color:black;font:lighter" href="#"><strong>' + username + '</strong></a>  ' + modified_at + '</h6>' +
+            '<h6 class="mt-4"><a style="text-decoration:none;color:black" style="text-decoration:none" href="#">' + answer.answer + '</a></h6>' +
+            
+            '<h6>' + " " + '</h6></div></div>' +
+            '<div class="row mt-4"><div class="col-8">' +
+            '<button class="btn rounded border">&#x1F44D &#x1F44E &#x1F44F ' + reaction_score + '</button></div>' +
+            '</div></div>'+
+           
+            '<input type="button" name="'+ answer.id+'"  value="show replies" id='+ answer.url+' style="color:blue" class="btn  btn-light btn-lg btn-block">'+
+            
+                '<div class="card bg-white  p-4 rounded"><div class="row">' +
+                '<div class="col-1 p-0">'+
+                '<a href="#"><img src="{{ user.profile.profile_image.url }}" class="img-fluid rounded-circle" style="width: 60px;"></a>' +
+                '</div>'+
+                '<div class="col-11">'+
+                '<form class="">'+
+                '<div class="">'+
+                ' <textarea class="form-control " id="validationTextarea" placeholder="Write your Reply..." required></textarea>'+
+                // ' <div class="invalid-feedback"> Please enter a message in the textarea. </div>'+
+                '<input class="btn btn-outline-success mt-2" type="submit" value="Submit">'+
+                '</div>'+
+                '</form>'+
+                '</div>'+
+                '</div></div></div>'+
+                '<div id="'+answer.id+'" class="ml-5" style="display:none">'+
+                '</div>';
+            
+            
+      answers_html = answers_html+answer_html
+    });
+    $("#main-body").html($("#main-body").html() + answers_html);
+  }
+    
+
+
+
+
+
+
+</script>
+
+{% endblock scripts %}

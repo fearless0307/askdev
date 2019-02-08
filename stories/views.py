@@ -23,10 +23,12 @@ def stories_home(request):
 
 
 def stories_detail(request, pk):
+    story = Story.objects.get(id=pk)
     story_url = request.build_absolute_uri(reverse('story-detail', kwargs={'pk': pk}))
     context = {
         'title': 'Story',
-        'story_url': story_url
+        'story_url': story_url,
+        'story': story,
     }
     return render(request, 'stories/story_detail.html', context)
 
