@@ -84,7 +84,7 @@
       question_url = "{% url 'questions-home' %}" + question.id + "/";
       console.log(question_url);
       image_url = "{% static 'questions/img/community-back.png' %}";
-      tags = question.tags.map(x => '<a class="badge badge-pill badge-info" href="/tags/' + x.tag_name + '/">' + x.tag_name + '</a>').join(" ");
+      tags = question.tags.map(x => '<a class="badge badge-pill badge-info" href="/tags/' + x.tag_name + '/questions/">' + x.tag_name + '</a>').join(" ");
       let reactions = new Set();
       let reaction_score = 0;
       question.reactions.forEach(element => {

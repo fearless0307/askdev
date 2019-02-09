@@ -89,7 +89,7 @@
       });
       let modified_at_moment = moment(Date.parse(question.modified_at)).toNow(true) + " ago";
       console.log(modified_at_moment);
-      question_url = "{% url 'stories-home' %}" + question.id + "/";
+      question_url = "{% url 'questions-home' %}" + question.id + "/";
       console.log(question_url);
       image_url = "{% static 'questions/img/community-back.png' %}";
       tags = question.tags.map(x => '<a class="badge badge-pill badge-info" href="/tags/' + x.tag_name +

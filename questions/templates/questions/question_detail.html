@@ -160,7 +160,7 @@
     });
     let modified_at_moment = moment(Date.parse(question.modified_at)).toNow(true) + " ago";
 
-    tags = question.tags.map(x => '<a class="badge badge-pill badge-info" href="/tags/' + x.tag_name + '/questions/">#' +
+    tags = question.tags.map(x => '<a class="badge badge-pill badge-info" href="/tags/' + x.tag_name + '/questions/">' +
       x.tag_name + '</a>').join(" ");
     // console.log("tags")
     let reactions = new Set();
