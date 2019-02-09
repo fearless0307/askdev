@@ -69,9 +69,9 @@ def stories_edit(request, pk):
     if request.method == "POST":
         story_form = StoryForm(request.POST, instance=story)
         if story_form.is_valid():
-            story_post = story_form.save(commit=False)
-            story_post.author = request.user
-            story_post.save()
+            story_post = story_form.save()
+            # story_post.author = request.user
+            # story_post.save()
             messages.success(
                 request, f'Your story has been updated!', extra_tags='success')
             return redirect('stories-detail', pk=story_post.pk)

@@ -89,17 +89,24 @@ def question_delete(request, pk):
 
 @login_required
 def question_update(request, pk):
+    question = Question.objects.get(id=pk)
+    question_form = QuestionForm(instance=question)
     if request.method == 'POST':
-        form = request.POST
-        # print("form=",form,request.user.id)
-        question = Question.objects.get(id=pk)
-        # print("done=done",question)
-        if question is not None:
-            print("done")
-            question.question = form['question']
-            question.save()
-            return redirect('questions-home')
-    return render(request, 'questions/question_create.html')
+        question_form = QuestionForm(request.POST, instance=question)
+        if question_form.is_valid():
+            # form = request.POST
+            # print("form=",form,request.user.id)
+            # question = Question.objects.get(id=pk)
+            # print("done=done",question)
+            question_form.save()
+            messages.success(
+            request, f'Your question has been updated!', extra_tags='success')
+            return redirect('questions-detail', pk=pk)
+        else:
+            messages.error(request, f'Something went wrong!',
+                           extra_tags='danger')
+
+    return render(request, 'questions/question_edit.html', {'question_form':question_form})
 
 @login_required
 def answer_create(request):

@@ -9,17 +9,17 @@
     <div class="col-12 col-sm-12 col-md-12 col-lg-10 col-xl-10 view-type">
       <span>VIEW</span>
       {% if view_type == 'list' %}
-      <span class="view-button" ><a href="{% url 'questions-home' %}?view=card"><i class="fas fa-th-large"></i></a></span>
-      <span class="view-button" ><a href="{% url 'questions-home' %}?view=detail"><i class="fas fa-bars"></i></a></span>
-      <span class="view-active" ><a href="{% url 'questions-home' %}?view=list"><i class="fas fa-align-justify"></i></a></span>
+      <span class="view-button"><a href="{% url 'questions-home' %}?view=card"><i class="fas fa-th-large"></i></a></span>
+      <span class="view-button"><a href="{% url 'questions-home' %}?view=detail"><i class="fas fa-bars"></i></a></span>
+      <span class="view-active"><a href="{% url 'questions-home' %}?view=list"><i class="fas fa-align-justify"></i></a></span>
       {% elif view_type == 'detail' %}
-      <span class="view-button" ><a href="{% url 'questions-home' %}?view=card"><i class="fas fa-th-large"></i></a></span>
-      <span class="view-active" ><a href="{% url 'questions-home' %}?view=detail"><i class="fas fa-bars"></i></a></span>
-      <span class="view-button" ><a href="{% url 'questions-home' %}?view=list"><i class="fas fa-align-justify"></i></a></span>
+      <span class="view-button"><a href="{% url 'questions-home' %}?view=card"><i class="fas fa-th-large"></i></a></span>
+      <span class="view-active"><a href="{% url 'questions-home' %}?view=detail"><i class="fas fa-bars"></i></a></span>
+      <span class="view-button"><a href="{% url 'questions-home' %}?view=list"><i class="fas fa-align-justify"></i></a></span>
       {% else %}
-      <span class="view-active" ><a href="{% url 'questions-home' %}?view=card"><i class="fas fa-th-large"></i></a></span>
-      <span class="view-button" ><a href="{% url 'questions-home' %}?view=detail"><i class="fas fa-bars"></i></a></span>
-      <span class="view-button" ><a href="{% url 'questions-home' %}?view=list"><i class="fas fa-align-justify"></i></a></span>
+      <span class="view-active"><a href="{% url 'questions-home' %}?view=card"><i class="fas fa-th-large"></i></a></span>
+      <span class="view-button"><a href="{% url 'questions-home' %}?view=detail"><i class="fas fa-bars"></i></a></span>
+      <span class="view-button"><a href="{% url 'questions-home' %}?view=list"><i class="fas fa-align-justify"></i></a></span>
       {% endif %}
       <span class="border h-100"></span>
       <span>SORT</span>
@@ -53,24 +53,24 @@
 {% endblock content %}
 
 {% block scripts %}
-<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-  crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
 <script>
   let questions_url = '{{ questions_url }}';
   let view_type = '{{ view_type }}';
-  console.log("url",questions_url)
-  console.log("view =",view_type)
-  $.ajax({url: questions_url, success: display_questions});
+  console.log("url", questions_url)
+  console.log("view =", view_type)
+  $.ajax({
+    url: questions_url,
+    success: display_questions
+  });
 
-  function display_questions(questions){
+  function display_questions(questions) {
     console.log("Showing questions");
     console.log(questions);
     let questions_html = '';
     questions.forEach(question => {
       let username = '';
       let profile_pic_url = '';
-      console.log("each=",question.question,question.author);
+      console.log("each=", question.question, question.author);
       $.ajax({
         url: question.author,
         success: function (result) {
@@ -84,7 +84,8 @@
       question_url = "{% url 'questions-home' %}" + question.id + "/";
       console.log(question_url);
       image_url = "{% static 'questions/img/community-back.png' %}";
-      tags = question.tags.map(x => '<a class="badge badge-pill badge-info" href="/tags/' + x.tag_name + '/">' + x.tag_name + '</a>').join(" ");
+      tags = question.tags.map(x => '<a class="badge badge-pill badge-info" href="/tags/' + x.tag_name +
+        '/questions/">' + x.tag_name + '</a>').join(" ");
       let reactions = new Set();
       let reaction_score = 0;
       question.reactions.forEach(element => {
@@ -93,10 +94,10 @@
       });
 
       let reaction_set = '';
-      for(r of reactions){
+      for (r of reactions) {
         reaction_set = reaction_set + r + ' ';
       }
-      if(reaction_set == ''){
+      if (reaction_set == '') {
         reaction_set = '&#x1F44D';
       }
 
@@ -108,21 +109,21 @@
       div.innerHTML = question.description;
       var allImage = div.getElementsByTagName('img');
       var firstImage = '';
-      console.log("all=",allImage);
+      console.log("all=", allImage);
       for (var i = 0; i < allImage.length; i++) {
-        if (allImage[i].src.indexOf("/media/uploads/") >= 0){
-            firstImage = allImage[i].src;
-            break;
+        if (allImage[i].src.indexOf("/media/uploads/") >= 0) {
+          firstImage = allImage[i].src;
+          break;
         }
       }
-      console.log("fimage=",firstImage);
+      console.log("fimage=", firstImage);
 
-      var question_question = div.innerHTML.replace(/<img alt="" src="\/m[^>]*>/g,"");
-      if(question_question == 'NULL'){
+      var question_question = div.innerHTML.replace(/<img alt="" src="\/m[^>]*>/g, "");
+      if (question_question == 'NULL') {
         question_question = "";
       }
-      console.log("image =",question_question)
-      console.log("question_url",question_url)
+      console.log("image =", question_question)
+      console.log("question_url", question_url)
       switch (view_type) {
         case "list":
           question_html = '<div class="card bg-white mb-4 p-4"><div class="row">' +
@@ -133,10 +134,10 @@
             '<h4 id="username-link"><a href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
             '<h6>' + tags + '</h6></div></div>' +
             '<div class="row mt-4"><div class="col-8">' +
-            '<button class="btn rounded border">'+ reaction_set +' '+ reaction_score + '</button></div>' +
+            '<button class="btn rounded border">' + reaction_set + ' ' + reaction_score + '</button></div>' +
             '<div class="col-4 text-right share-link">' +
-            '<span><a  class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
-            '<span><a  href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
+            '<span><a class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
+            '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
           break;
         case "detail":
           question_html = '<div class="card bg-white mb-4 p-4">' +
@@ -147,10 +148,10 @@
             '<h4 id="username-link"><a  href="#">' + username + '</a> - ' + modified_at_moment + '</h4>' +
             '<h6>' + tags + '</h6></div>' +
             '<div class="col-4 col-md-3"><img class="img-fluid rounded" src="' + firstImage + '"></div></div>' +
-            '<div class="row mt-4"><div class="col-8"><button class="btn rounded border">'+reaction_set+' ' +
+            '<div class="row mt-4"><div class="col-8"><button class="btn rounded border">' + reaction_set + ' ' +
             reaction_score + '</button></div>' +
             '<div class="col-4 text-right share-link"><span><a  class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
-            '<span><a  href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
+            '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
           break;
         default:
           question_html = '<div class="card bg-white mb-4 p-4">' +
@@ -163,16 +164,15 @@
             '' + question_question + '' +
             '<img class="img-fluid rounded" src="' + firstImage + '"></div></div>' +
             '<div class="row mt-4"><div class="col-8">' +
-            '<button class="btn rounded border">'+reaction_set+' ' + reaction_score + '</button></div>' +
+            '<button class="btn rounded border">' + reaction_set + ' ' + reaction_score + '</button></div>' +
             '<div class="col-4 text-right share-link">' +
             '<span><a  class="pr-3" href="#"><i class="far fa-bookmark"></i></a></span>' +
-            '<span><a  href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
+            '<span><a href="#"><i class="fas fa-share-alt"></i></a></span></div></div></div>';
       }
       // console.log( $('.question-body img').attr('src') );
       questions_html = questions_html + question_html;
     });
     $("#main-body").html($("#main-body").html() + questions_html);
   }
-
 </script>
 {% endblock scripts %}

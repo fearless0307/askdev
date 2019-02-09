@@ -47,12 +47,13 @@
       </div>
       <div class="col-5 col-sm-7 col-md-7 col-lg-6 col-xl-6">
         <form action="{% url 'questions-search' %}" method="GET">
-        <div class="input-group mb-2 mr-sm-2">
-          <input type="text" class="form-control" name="search" placeholder="Search" aria-label="search" aria-describedby="button-search">
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="submit" id="button-search"><i class="fas fa-search"></i></button>
+          <div class="input-group mb-2 mr-sm-2">
+            <input type="text" class="form-control" name="search" placeholder="Search" aria-label="search"
+              aria-describedby="button-search">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="submit" id="button-search"><i class="fas fa-search"></i></button>
+            </div>
           </div>
-        </div>
         </form>
         <!-- <div class="input-group mb-2 mr-sm-2">
           <div class="input-group-prepend">
@@ -120,9 +121,9 @@
               <li class="nav-item">
                 <a class="nav-link text-black p-1 p-xl-2" href="{% url 'tags-home' %}">TAGS</a>
               </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a class="nav-link text-black p-1 p-xl-2" href="#">COMMUNITIES</a>
-              </li>
+              </li> -->
             </ul>
           </div>
         </div>
@@ -131,7 +132,7 @@
             <ul class="nav flex-column">
               <li class="nav-item p-2">
                 <span>OTHER IMPORTANT STUFF</a>
-                <hr>
+                  <hr>
               </li>
               <li class="nav-item">
                 <a class="nav-link text-black p-1 p-xl-2" href="{% url 'about' %}">About</a>
@@ -172,7 +173,9 @@
 
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+  <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script> -->
+  <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
     crossorigin="anonymous"></script>
@@ -180,8 +183,8 @@
     crossorigin="anonymous"></script>
 
 
-  <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-    crossorigin="anonymous"></script>
+  <!-- <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
   {% block scripts %}{% endblock scripts %}
 

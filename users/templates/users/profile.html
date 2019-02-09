@@ -7,14 +7,24 @@
 {% endblock css %}
 {% block content %}
 <div class="card bg-white mb-4">
-  <div class="card-body">
-    <h2 class="text-center">Account Settings for {{ user.username }}</h2>
+  <div class="card-body p-0">
+    <!-- <h2 class="text-center">Account Settings for {{ user.username }}</h2> -->
     <img class=" img-fluid w-100" style="height:500px" src="{{ user.profile.cover_image.url }}" alt="cover image">
-    <div style="margin-top: -100px">
+    <!-- <div style="margin-top: -100px">
       <img class="rounded-circle border" style="width: 200px; height: 200px;" src="{{ user.profile.profile_image.url }}"
         alt="profile image">
+    </div> -->
+    <div class="col">
+      <div class="row" style="margin-top: -100px;">
+        <div class="col-12">
+          <img class="rounded-circle border ml-4" style="width: 150px; height: 150px;" src="{{ user.profile.profile_image.url }}">
+          <!-- <h1 class="pl-3 pt-3">{{ user.username }}</h1>
+          <h4 class="pl-3 ">{{ user.email }}</h4> -->
+        </div>
+      </div>
     </div>
     <!-- \ Basic Info -->
+    <div class="p-4">
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
       <fieldset class="form-group">
@@ -27,6 +37,7 @@
       </div>
     </form>
     <!-- \ Form -->
+    </div>
   </div>
 </div>
 {% endblock content %}
